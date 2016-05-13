@@ -299,10 +299,16 @@
             <div style="text-align:center">
             <img src="img/gameLayout.jpg">
             </div>
-            The image shown above is the screenshot of Lumberman app. As you can see here, when we take the first image to determine the threshold values, we have to consider 10 sites and set thresholds for each site. But, how? First, we need to know if there is a branch at each area or not. Second, based on our analysis of the intensities of the images taken by PiCamera, the intensity values can vary a lot owing to the environmental lighting. Which results in different intensity values between not only different layers but also left-hand side and right-hand side. Therefore, as a small summary here, we need to assign different thresholds for each site.  
-
+            The image shown above is the screenshot of Lumberman app. As you can see here, when we take the first image to determine the threshold values, we have to consider 10 sites and set thresholds for each site. But, how? First, we need to know if there is a branch at each area or not. Second, based on our analysis of the intensities of the images taken by PiCamera, the intensity values can vary a lot owing to the environmental lighting condition. Which results in different intensity values between not only different layers but also left-hand side and right-hand side. Therefore, as a small summary here, we need to assign different thresholds for each site. We tried different methods to determine the thresholds and improve accuracy. Like using minimum values - because if there is a branch, it would contain the black color in the area and the intensity is 0. However as we said earlier in this session, due to various environment lighting condition, the intensities at different regions are not consistent. Using minimum or maximum can not reach high accuracy for detection a branch. At last, we came up with a great idea about this, that is using <font style="background-color:#E0E0E0">"variance"</font> values over the regions for branches. Since in the case that if there is no branch at site 1,2,3,4, the background is uniform, and the variance of the intensity values at these areas is small. When there exists a branch, the variance of the intensity values can by a large value! So in lastet version of our design, the detection method for site 0 is to find out the <font style="background-color:#E0E0E0">differences</font> between the original image and each image we take for tapping event; the detection method for site 1,2,3,4 is to use <font style="background-color:#E0E0E0">variances</font> as our threshold - if the variance at the specific area is larger than some value (we set 300 here) and it means there exists a branch. Furthermore, to fit this new detection method, we need to carefully decide the region we want to detect due to some unexpected situations - such as the screen pops up "Level x" when you reach Level x and the time-remaining strip affects the detection as well. The image shown below is the regions we decide to detect the branches.
+            <div style="text-align:center">
+            <img src="img/gamelayout2.jpg">
+            </div>
+            With this modified detection method and good hardward part for tapping the capacitive screen of our mobile phone, our raspberry pi can score with 2855 - a really high new record! But there is still another issue here, that is the threshold setting is optimally designed for the red background of the game. This game contains three kinds of background, it is required to have different detection method for our algorithm. 
             </p>
             <br>
+            <div style="text-align:center">
+            <font size = "5"> Come join us and see if you can beat our raspberry pi!! </font>
+            </div>
             </p>
 
             </ul>
@@ -337,7 +343,7 @@
             <p><b><li><span>First version - with highest scores as 14 points </span></li></b></p>
             This version is our first trial, which runs slowly. The main bottle neck is the time for taking a picture. The progress of this algortithm is - take a picture, image-processing and then trigger the touch event. However, the picamera is initialized and turned on its configuration each time when it needs to capture a picture. Therefore it went slow.
             <blockquote>
-###############################################################################
+<font color = "#8f908a">###############################################################################
 <br>                                                                          
 # file:    runOnPy.py                                                        
 <br>                                                                          
@@ -357,198 +363,423 @@
 <br>
 <br>
 <br>
-### Imports ###################################################################
+### Imports ###################################################################</font>
+<br><font color = "#0076ac">
+import </font> picamera
 <br>
-import picamera
+from PIL <font color = "#0076ac">
+import </font>  Image
 <br>
-from PIL import Image
+<font color = "#0076ac">
+import </font>  numpy as np
 <br>
-import numpy as np
+<font color = "#0076ac">
+import </font>scipy.misc import imread, imsave
 <br>
-from scipy.misc import imread, imsave
+<font color = "#0076ac">
+import </font>  matplotlib.image as mpimg
 <br>
-import matplotlib.image as mpimg
+<font color = "#0076ac">
+import </font>  RPi.GPIO as GPIO
 <br>
-import RPi.GPIO as GPIO
+<font color = "#0076ac">
+import </font>  os 
 <br>
-import os 
+<font color = "#0076ac">
+from </font>  time <font color = "#0076ac">
+import </font>  sleep
 <br>
-from time import sleep
 <br>
+<font color = "#8f908a">
+#### Detction of branch #######################################################</font>
 <br>
-#### Detction of branch #######################################################
+<font color = "#52c48e">def</font> <font color = "#4760a5">detectBranch</font>>(site, value,thr):
 <br>
-def detectBranch(site, value,thr):
+&nbsp;&nbsp;&nbsp;if site == 0 and (thr - value ) > 0.06:
 <br>
-&nbsp;&nbsp;if site == 0 and (thr - value ) > 0.06:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return True
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;return True
+&nbsp;&nbsp;&nbsp;elif site == 1 and thr - value > 0.06:
 <br>
-&nbsp;&nbsp;elif site == 1 and thr - value > 0.06:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return True
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;return True
+&nbsp;&nbsp;&nbsp;else:
 <br>
-&nbsp;&nbsp;else:
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;return False 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return False 
 <br>
 <br>    
-#### Function that receive a photo and make a decision ########################
+<font color = "#8f908a">
+#### Function that receive a photo and make a decision ########################</font>
 <br>
-def play(camera, thLU,thRU):
+<font color = "#52c48e">def</font> <font color = "#4760a5">play</font>(camera, thLU,thRU):
 <br>
-&nbsp;&nbsp;# fileName: image name ; status: where to go ; 0 : go right, 1: go left
+<font color = "#8f908a">
+&nbsp;&nbsp;&nbsp;# fileName: image name ; status: where to go ; 0 : go right, 1: go left</font>
 <br>
-&nbsp;&nbsp;status = 1 
+&nbsp;&nbsp;&nbsp;status = 1 
 <br>
 <br>
-&nbsp;&nbsp;while True: 
+&nbsp;&nbsp;&nbsp;while True: 
 <br>
-&nbsp;&nbsp;fileName = "image.jpg"
+&nbsp;&nbsp;&nbsp;fileName = "image.jpg"
 <br>
-&nbsp;&nbsp;camera_width = 320
+&nbsp;&nbsp;&nbsp;camera_width = 320
 <br>
-&nbsp;&nbsp;camera_height = 240
+&nbsp;&nbsp;&nbsp;camera_height = 240
 <br>
-&nbsp;&nbsp;camera.resolution = (camera_width, camera_height)
+&nbsp;&nbsp;&nbsp;camera.resolution = (camera_width, camera_height)
 <br>
-&nbsp;&nbsp;camera.capture(fileName,format='jpeg')
+&nbsp;&nbsp;&nbsp;camera.capture(fileName,format='jpeg')
 <br>
-&nbsp;&nbsp;image_data = imread(fileName)
+&nbsp;&nbsp;&nbsp;image_data = imread(fileName)
 <br>
-&nbsp;&nbsp;#normalize image data to be between 0 -1 
+<font color = "#8f908a">
+&nbsp;&nbsp;&nbsp;#normalize image data to be between 0 -1 </font>
 <br>
-&nbsp;&nbsp;image_dataN=image_data/255.
+&nbsp;&nbsp;&nbsp;image_dataN=image_data/255.
 <br>
-&nbsp;&nbsp;#Detect the branch by take average of intensity of the image at specific area
+<font color = "#8f908a">
+&nbsp;&nbsp;&nbsp;#Detect the branch by take average of intensity of the image at specific area</font>
 <br>
-&nbsp;&nbsp;leftUp   =np.mean(image_dataN[36:48, 25:80])
+&nbsp;&nbsp;&nbsp;leftUp   =np.mean(image_dataN[36:48, 25:80])
 <br>
-&nbsp;&nbsp;rightUp  =np.mean(image_dataN[36:48, 150:200])
+&nbsp;&nbsp;&nbsp;rightUp  =np.mean(image_dataN[36:48, 150:200])
 <br>
-&nbsp;&nbsp;if status == 0 :
+&nbsp;&nbsp;&nbsp;if status == 0 :
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;if detectBranch(0,leftUp,thLU): 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if detectBranch(0,leftUp,thLU): 
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status = 1
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status = 1
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;doit(status)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doit(status)
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;else : 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else : 
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status = 0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status = 0
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;doit(status)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doit(status)
 <br>
-&nbsp;&nbsp;else:
+&nbsp;&nbsp;&nbsp;else:
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;if detectBranch(1,rightUp,thRU): 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if detectBranch(1,rightUp,thRU): 
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status = 0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status = 0
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;doit(status)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doit(status)
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;else : 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else : 
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status = 1
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status = 1
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;doit(status)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doit(status)
 <br>
 <br>
 <br>
 #### GPIO output ##############################################################
 <br>
-def doit(status):
+<font color = "#52c48e">def</font> <font color = "#4760a5">doit</font>(status):
 <br>
-&nbsp;&nbsp;if status == 1:
+&nbsp;&nbsp;&nbsp;if status == 1:
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;print("go Left")
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print("go Left")
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;GPIO.output(5,1)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GPIO.output(5,1)
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;sleep(0.05)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sleep(0.05)
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;GPIO.output(5,0)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GPIO.output(5,0)
 <br>        
-&nbsp;&nbsp;else:
+&nbsp;&nbsp;&nbsp;else:
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;print("go right")
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print("go right")
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;GPIO.output(6,1)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GPIO.output(6,1)
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;sleep(0.05)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sleep(0.05)
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;GPIO.output(6,0)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GPIO.output(6,0)
 <br>
 <br>
 #### Initialize PiCamera ######################################################
 <br>
-def main():
+<font color = "#52c48e">def</font> <font color = "#4760a5">main()</font>:
 <br>
     #
 <br>
-&nbsp;&nbsp;GPIO.setmode(GPIO.BCM)
+&nbsp;&nbsp;&nbsp;GPIO.setmode(GPIO.BCM)
 <br>
-&nbsp;&nbsp;GPIO.setup(5,GPIO.OUT)
+&nbsp;&nbsp;&nbsp;GPIO.setup(5,GPIO.OUT)
 <br>
-&nbsp;&nbsp;GPIO.setup(6,GPIO.OUT)
+&nbsp;&nbsp;&nbsp;GPIO.setup(6,GPIO.OUT)
 <br>
-&nbsp;&nbsp;GPIO.output(5,0) 
+&nbsp;&nbsp;&nbsp;GPIO.output(5,0) 
 <br>
-&nbsp;&nbsp;GPIO.output(6,0)
+&nbsp;&nbsp;&nbsp;GPIO.output(6,0)
 <br>    
-&nbsp;&nbsp;print("Initializing the camera .....")
+&nbsp;&nbsp;&nbsp;print("Initializing the camera .....")
 <br>
-    #initialize picamera
+<font color = "#8f908a">
+    #initialize picamera</font>
 <br>
-&nbsp;&nbsp;camera = picamera.PiCamera()
+&nbsp;&nbsp;&nbsp;camera = picamera.PiCamera()
 <br>
-    # verizontal flip
+<font color = "#8f908a">
+    # verizontal flip</font>
 <br>
-&nbsp;&nbsp;camera.vflip = True
+&nbsp;&nbsp;&nbsp;&nbsp;camera.vflip = True
+<br><font color = "#8f908a">
+    # Capture the first pic to determine the threshold</font>
 <br>
-    # Capture the first pic to determine the threshold
+&nbsp;&nbsp;&nbsp;camera_width = 320
 <br>
-&nbsp;&nbsp;camera_width = 320
+&nbsp;&nbsp;&nbsp;camera_height = 240
 <br>
-&nbsp;&nbsp;camera_height = 240
+&nbsp;&nbsp;&nbsp;camera.resolution = (camera_width, camera_height)
 <br>
-&nbsp;&nbsp;camera.resolution = (camera_width, camera_height)
+&nbsp;&nbsp;&nbsp;camera.capture("threshold.jpg",format='jpeg')
 <br>
-&nbsp;&nbsp;camera.capture("threshold.jpg",format='jpeg')
+&nbsp;&nbsp;&nbsp;image_data = imread("threshold.jpg")
 <br>
-&nbsp;&nbsp;image_data = imread("threshold.jpg")
+&nbsp;&nbsp;&nbsp;camera.capture("threshold.jpg",format='jpeg')
 <br>
-&nbsp;&nbsp;camera.capture("threshold.jpg",format='jpeg')
+&nbsp;&nbsp;&nbsp;image_data = imread("threshold.jpg")
 <br>
-&nbsp;&nbsp;image_data = imread("threshold.jpg")
-<br>
-&nbsp;&nbsp;image_dataN=image_data/255.
+&nbsp;&nbsp;&nbsp;image_dataN=image_data/255.
 <br>
 <br>
-&nbsp;&nbsp;thLU = np.mean(image_dataN[36:48, 25:80])
+&nbsp;&nbsp;&nbsp;thLU = np.mean(image_dataN[36:48, 25:80])
 <br>
-&nbsp;&nbsp;thRU = np.mean(image_dataN[36:48, 150:200])
+&nbsp;&nbsp;&nbsp;thRU = np.mean(image_dataN[36:48, 150:200])
 <br>
-&nbsp;&nbsp;print("Initialization done! And Start to Play!")
+&nbsp;&nbsp;&nbsp;print("Initialization done! And Start to Play!")
 <br>
-&nbsp;&nbsp;play(camera, thLU,thRU)
+&nbsp;&nbsp;&nbsp;play(camera, thLU,thRU)
 <br>
-&nbsp;&nbsp;print("Game Over")
+&nbsp;&nbsp;&nbsp;print("Game Over")
 <br>
 <br>    
 <br>
 if __name__ == '__main__':
 <br>
-&nbsp;&nbsp;main()
+&nbsp;&nbsp;&nbsp;main()
 <br>
             </blockquote>
 
-             </p>
+             <p><b><li><span>Second version - with highest scores as 2855 points </span></li></b></p>
+            In this version we improve our speed for pi to play this game app, also high accuracy is guaranteed. 
+            <blockquote>
+            <font color = "#8f908a">
+###############################################################################
+<br>
+# file:    runOnPyFinal.py                                                    
+<br>
+# authors: Wen-Yu Wang  - ww424 
+<br>                                              
+#          Hanchen Jin  - hj424                                               
+<br>                                                                         
+# date:    December 1st 2015                                                  
+<br>                                                                              
+# brief:   This is our version7 code, using minimum intensity to detect if    
+<br> 
+#          there is a branch, and we also clean our code, making it clear.    
+<br>                                                                             
+###############################################################################
+<br>
+<br>
+<br>
 
+### Imports ###################################################################</font>
+<br><font color = "#0076ac">
+import </font> picamera
+<br>
+from PIL <font color = "#0076ac">
+import </font>  Image
+<br>
+<font color = "#0076ac">
+import </font>  numpy as np
+<br>
+<font color = "#0076ac">
+import </font>scipy.misc import imread, imsave
+<br>
+<font color = "#0076ac">
+import </font>  matplotlib.image as mpimg
+<br>
+<font color = "#0076ac">
+import </font>  RPi.GPIO as GPIO
+<br>
+<font color = "#0076ac">
+import </font>  os 
+<br>
+<font color = "#0076ac">import </font>  time
+<br>
+<br>
+<font color = "#8f908a">
+### Main function including Setup #############################################</font>
+<br> 
+<font color = "#52c48e">def</font> <font color = "#4760a5">main()</font>:
+<br> 
+&nbsp;&nbsp;&nbsp;#Setup for GPIO pins
+<br> 
+&nbsp;&nbsp;&nbsp;    GPIO.setmode(GPIO.BCM)
+<br> 
+&nbsp;&nbsp;&nbsp;    GPIO.setup(5,GPIO.OUT)
+<br> 
+&nbsp;&nbsp;&nbsp;    GPIO.setup(6,GPIO.OUT)
+<br> 
+&nbsp;&nbsp;&nbsp;    GPIO.output(5,0) 
+<br> 
+&nbsp;&nbsp;&nbsp;    GPIO.output(6,0)
+<br> 
+<br> <font color = "#8f908a">
+&nbsp;&nbsp;&nbsp;    # Capture the first pic to determine the threshold
+<br> 
+&nbsp;&nbsp;&nbsp;    # Low resolution making it read file faster </font>
+<br> 
+&nbsp;&nbsp;&nbsp;    print("Initializing the camera .....")
+<br> 
+&nbsp;&nbsp;&nbsp;    threshold =[[135] * 5 for i in <font color = "#52c48e">range</font> (2)]
+<br> 
+&nbsp;&nbsp;&nbsp;    camera = picamera.PiCamera()
+<br> 
+&nbsp;&nbsp;&nbsp;    camera.vflip = True
+<br> 
+&nbsp;&nbsp;&nbsp;    camera_width = 160
+<br> 
+&nbsp;&nbsp;&nbsp;    camera_height = 120
+<br> 
+&nbsp;&nbsp;&nbsp;    camera.resolution = (camera_width, camera_height)
+<br> 
+&nbsp;&nbsp;&nbsp;    for _ in <font color = "#52c48e">range</font> (5):
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        camera.capture("threshold.jpg",format='jpeg',use_video_port=True)
+<br> 
+&nbsp;&nbsp;&nbsp;    image_data = imread("threshold.jpg")
+<br>     
+&nbsp;&nbsp;&nbsp;    threshold[0][0] = np.mean(image_data[90:98, 48:68,:])
+<br> 
+ &nbsp;&nbsp;&nbsp;   threshold[1][0] = np.mean(image_data[87:95, 89:107,:])
+<br> 
+<br> 
 
+<br> 
+&nbsp;&nbsp;&nbsp;    print("Initialization done! And Start to Play!")
+<br> 
+&nbsp;&nbsp;&nbsp;    play(camera,threshold)
+<br> 
+&nbsp;&nbsp;&nbsp;   print("Game Over")
+<br> 
+<br> 
+<br> <font color = "#8f908a">
+### Detect branch and move accordingly ########################################</font>
+<br> 
+<br> 
 
+<font color = "#52c48e">def</font> <font color = "#4760a5">play</font>(camera,threshold):
+<br> <font color = "#8f908a">
+&nbsp;&nbsp;&nbsp;    # fileName: image name ; status: where to go ; 0 : go right, 1: go left</font>
+<br> 
+&nbsp;&nbsp;&nbsp;    status = True
+<br> 
+&nbsp;&nbsp;&nbsp;    branch = [[0] * 5 for _ in <font color = "#52c48e">range</font>(2)]
+<br> 
+&nbsp;&nbsp;&nbsp;    move = [False] * 5 
+<br> 
+<br> 
 
+&nbsp;&nbsp;&nbsp;    while True: 
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        fileName = "image"+str(index)+".jpg"
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        camera_width = 160
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        camera_height = 120
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        camera.resolution = (camera_width, camera_height)
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        camera.capture(fileName,use_video_port=True)
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        image_data = imread(fileName)
+<br>  
+<br> <font color = "#8f908a">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        #Detect the branch by take average of intensity of the image at specific area</font>
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        branch[0][0] = np.mean(image_data[90:98, 48:68,:])
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        branch[1][0] = np.mean(image_data[87:95, 89:107,:])
+<br> 
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        branch[0][1] = np.var(image_data[66:76, 45:60,:])
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        branch[1][1] = np.var(image_data[65:73, 97:107,:])
+<br> 
+<br> 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;       branch[0][2] = np.var(image_data[50:58, 45:60,:])
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        branch[1][2] = np.var(image_data[48:57, 93:107,:])
+<br> 
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        branch[0][3] = np.var(image_data[33:43, 40:52,:])
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        branch[1][3] = np.var(image_data[32:46, 95:107,:])
+<br> 
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        branch[0][4] = np.var(image_data[20:30, 45:57,:])
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        branch[1][4] = np.var(image_data[20:32, 91:107,:])
+<br> 
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        temp = status 
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        for j in <font color = "#52c48e">range</font> (5):
+<br> <font color = "#8f908a">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            ##Detect branch and move
+<br> </font>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            if j == 0 :
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                if (threshold[temp][0] - branch[temp][0]) > 55.:
+<br> 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                   temp = not temp 
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            elif j in [1,2,3,4]:
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                if branch[temp][j] >= threshold[temp][j] :
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                    temp = not temp
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            move[j]=temp
+<br> 
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        status = temp
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        for i in <font color = "#52c48e">range</font> (5):
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            if move[i] is True : 
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                GPIO.output(6,1)
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                sleep(0.06)
+<br> 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;               GPIO.output(6,0)
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                sleep(0.09)
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            else:
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                GPIO.output(5,1)
+<br> 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;               sleep(0.06)
+<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                GPIO.output(5,0)
+<br> 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;               sleep(0.09)
+<br> 
+<br>       
+<br> 
+if __name__ == '__main__':
+<br> 
+&nbsp;&nbsp;&nbsp;    main()
+<br> 
+            </blockquote>
             </ul>
            
 
@@ -582,7 +813,7 @@ if __name__ == '__main__':
             <br>
             <br>
             <img src = "img/wenyu.png"> 
-            <font size = "4"> Wen-Yu Wang (ww424) : <br>In charge of software part, including the detection of branches and the template of report. She loves this project and she thinks this project is the most interesting project she has worked during her student life. In this project, she thinks they have learned how to developing a "project" and how to solve problems systematically. :) Thanks professor and course staffs for the helpful advices. She also appreciated her partner for the good team-work along the whole semester.</font>
+            <font size = "4"> Wen-Yu Wang (ww424) : <br>In charge of software part, including the detection of branches and the template of report. She loves this project and she thinks this project is the most interesting project she has worked during her student life. In this project, she thinks they have learned how to developing a "project" and how to solve problems systematically. :) Thanks professor and course staffs for the helpful advices. She also appreciated her partner for the good team-work along the whole semester. Besides, she wanted to give a special thanks to her boyfriend for the creative idea for this project :)</font>
             <br>
             <img src = "img/hj424.png"> 
             <font size = "4"> Hanchen Jin (hj424) : <br>In charge of hardware part, including the circuit design and the connection of the GPIO. </font>
