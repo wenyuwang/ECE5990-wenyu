@@ -1,1 +1,615 @@
-Hello World
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="This is the report for ECE5990, final project">
+    <meta name="author" content="Wen-Yu Wang">
+    <link rel="icon" href="img/icon-2.png">
+    <title>ECE5990Final-Project</title>
+    <style type="text/css">
+        ul {list-style-type: circle; font-size: 120%; line-height: 2}
+        li span {font-size: 100%; vertical-align: middle;}
+    </style>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/one-page-wonder.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Pi Game Player </a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="#objectives">Objective</a>
+                    </li>
+                    <li>
+                        <a href="#introduction">Introduction</a>
+                    </li>
+                    <li>
+                        <a href="#setting_up">Set Up</a>
+                    </li>
+                    <li>
+                        <a href="#System_Design">System Design</a>
+                    </li>
+                    <li>
+                        <a href="#results">Results</a>
+                    </li>
+                    <li>
+                        <a href="#Code_Appendix">Code Appendix</a>
+                    </li>
+                    <li>
+                        <a href="#Conclusion">Conclusion</a>
+                    </li>
+
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Full Width Image Header -->
+    <header class="header-image">
+        <div class="headline">
+            <div class="container">
+                <h2>ECE5990 Final Project</h2>
+                <h2>Pi Game Player for iPhone!</h2>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Content -->
+    <div class="container">
+
+        <hr class="featurette-divider">
+        <!-- Zeroth Featurette -->
+        <div class="featurette" id="objectives">
+            <img class="featurette-image img-circle img-responsive pull-left" src="img/ourpi.jpg">
+            <h2 class="featurette-heading">What Goals
+                <span class="text-muted">We want</span>
+            </h2>
+            <br>
+            <br>
+            <br>
+            <p class="lead"> - Build a robotic system to play mobile game app </p>
+            <p class="lead"> - High accuracy (high scores) is guaranteed</p>
+            <p class="lead"> - High speed to play the game apps is also guaranteed </p>
+            <br>
+            <br>
+
+
+        </div>
+
+        <hr class="featurette-divider">
+
+        <!-- First Featurette -->
+        <div class="featurette" id="introduction">
+            <img class="featurette-image img-circle img-responsive pull-right" src="img/game.jpg">
+            <h2 class="featurette-heading">Get to know
+                <span class="text-muted">Our Idea</span>
+            </h2>
+            <p class="lead">Raspberry Pi is an ideal platform to build a small robot. We get the idea from Lab3 which we can build a robotic car on a raspberry pi system by writing some controlling programming. But, in Lab3, our robot does not have “eyes”. So, here is our idea – we want to build up a robot with eyes and make it play some simple game apps, such as Lumberman. Lumberman is a mobile game app, where you need to avoid the branched when you chop the wood. We implemented the algorithm to detect where are thr branches and make our raspberry pi to chop the wood! </p>
+            <br>
+            
+            <font size="4">Keyword: PiCamera, Image Processing, Raspberry Pi </font>
+
+        </div>
+
+        <hr class="featurette-divider">
+
+        <!-- Second Featurette -->
+        <div class="featurette" id="setting_up">
+            <h2 class="featurette-heading">Setup environment
+                <span class="text-muted">For PiCamera and Libraries</span>
+            </h2>
+            <p class="lead">Before we start our project, we need to set up the environment for raspberry pi.</p>
+            <ul>
+
+            <p><b><li><span>PiCamera</span></li></b></p>
+            <font style="background-color:#E0E0E0">python-picamera</font> is a pure Python interface to the Raspberry Pi camera module for Python 2.7 (or above) or Python 3.2 (or above). 
+
+            <p><b>First: Enable PiCamera</b>
+            <br>
+            Run <font style="background-color:#E0E0E0">sudo raspi-config</font> and choose in the menu to enable the pi camera. A reboot is needed after this.</p>
+
+            <p><b>Second: Install Library for PiCamera</b>
+            <br>
+            Run the following commands to get the library.</p>
+            <blockquote>
+                $ sudo apt-get update <br>
+                $ sudo apt-get install python-picamera
+            </blockquote>
+
+            Now you can import piCamera and capture a picture!
+            <blockquote>
+
+                <font color = "#0076ac">import</font> picamera <br>
+                camera = picamera.PiCamera() <br>
+                camera.capture(<font color = "#01B468">'image.jpg'</font>)
+
+            </blockquote>
+
+            <p><b><li><span>Image Processing Related Libraries</span></li></b></p>
+            Since we need our raspberry pi to "see" a scene, and we need the image-processing algorithm to help us to detect if there is a branch at specific site or not. And we need to install the libraries including <font style="background-color:#E0E0E0">SciPy</font>, <font style="background-color:#E0E0E0">Python Image Library (PIL)</font>,  <font style="background-color:#E0E0E0">matlibplot</font> , and <font style="background-color:#E0E0E0">skimage</font>.
+
+            <p><b>Scipy/NumPy/matplotlib</b>
+            <br>
+            The SciPy library is one of the core packages that make up the SciPy stack. It provides many user-friendly and efficient numerical routines such as routines for numerical integration and optimization.
+            <br>
+            <br>
+            NumPy is the fundamental package for scientific computing with Python. It contains among other things:
+                <br>- a powerful N-dimensional array object
+                <br>- sophisticated (broadcasting) functions
+                <br>- tools for integrating C/C++ and Fortran code
+                <br>- useful linear algebra, Fourier transform, and random number capabilities
+                <br>Besides its obvious scientific uses, NumPy can also be used as an efficient multi-dimensional container of generic data. Arbitrary data-types can be defined. This allows NumPy to seamlessly and speedily integrate with a wide variety of databases.
+            <br>
+            <br>
+            matplotlib is a python 2D plotting library which produces publication quality figures in a variety of hardcopy formats and interactive environments across platforms. </p>
+            <blockquote>
+                $ sudo apt-get install python-numpy python-scipy python-matplotlib python-pandas python-sympy python-nose 
+            </blockquote>
+
+            <p><b>Python Imaging Library (PIL)</b>
+            <br>
+            The Python Imaging Library (PIL) adds image processing capabilities to your Python interpreter. This library supports many file formats, and provides powerful image processing and graphics capabilities.
+            <br>
+            Here we are going to install PIL using pip, so we start with installing python-pip.
+
+            <blockquote>
+                $ sudo apt-get install python-pip
+            </blockquote>
+            With pip installed, install the required development packages:
+            <blockquote>
+                $ sudo apt-get install python-dev libjpeg-dev libfreetype6-dev zlib1g-dev
+            </blockquote>
+            After installing these packages, we have to symlink the three image libraries into /usr/lib. A symlink, which is short for symbolic link, is a special type of file that contains a reference to another file or directory. The reference is in the form of an absolute or relative path and it affects path-name resolution. To do that, type in the following commands on the terminal:
+            <blockquote>
+                $ sudo ln -s /usr/lib/`uname -i`-linux-gnu/libfreetype.so /usr/lib/
+                <br>
+                $ sudo ln -s /usr/lib/`uname -i`-linux-gnu/libjpeg.so /usr/lib/
+                <br>
+                $ sudo ln -s /usr/lib/`uname -i`-linux-gnu/libz.so /usr/lib/
+            </blockquote>
+            Now we are ready to install PIL. Type the following:
+             <blockquote>
+                $ sudo pip install pil
+            </blockquote>
+            To install Pillow (recommended), type the following:
+            <blockquote>
+                $ sudo pip install Pillow
+            </blockquote>
+            </p>
+            </ul>
+
+        </div>
+
+        <hr class="featurette-divider">
+
+        <!-- Third Featurette -->
+        <div class="featurette" id="System_Design">
+            <img class="featurette-image img-circle img-responsive pull-left" src="img/platform0.jpg">
+            <h2 class="featurette-heading">Sofeware and Hardware
+                <span class="text-muted">work together :)</span>
+            </h2>
+            <br>
+            <p class="lead">Our project can be splitted to three categories: platform design, hardware design and software design. Platform design is to provide the spaces for our smartphone and the raspberry pi, also make sure the relative postion of the camera and our smartphone can be fixed. As for hardware design, we are building the "hands" for the raspberry pi to invoke the touch events on the capacity screen of the smartphone when it needs to move to the other side. Last but not the least, the software part- this part can be analogous as the mind of our raspberry pi. We used the image-processing algorithm to detect the branchs and decide where to chop the woods on the screen. This project is lots of fun! Join us and see what each part works by scrolling down!  </p>
+            <br>
+            <br>
+            <br>
+
+            <ul>
+
+            <p><b><li><span>Platform Design</span></li></b></p>
+            For platform design, we used LEGO to build our architecture. With the flexibility of LEGO, we can rebuild the platform anytime we want when it's not fit for our project. On this platform, we built several spaces for different parts. Mobile phone, raspberry pi and the breadboard all have their specific areas to be at, and it can help us to fix the relative distance from the picamera and mobile phone. Therefore, we can eliminate some uncertainties and make it more easier to implement the image processing algorithm.  
+            <br>
+            <br>
+            <div style="text-align:center">
+            <img src="img/platform1.jpg">
+            <br>
+            <br>
+            <img src="img/platform2.jpg">
+            <img src="img/platform3.jpg">
+            <img src="img/platform4.jpg">
+            </div>
+            <p><b><li><span>Hardware Design</span></li></b></p>
+            <p><b><li><span>Software Design</span></li></b></p>
+            <div style="text-align:center">
+            <img src="img/schematicForsoft.jpg">
+            </div>
+            The flow-chart shown above is the basic idea for software part to detect the branch and tap the screen of our mobile phone. At the initialization stage, we take 5 pictures in a row to make sure the lighting condition and white balance setting are stable for piCamera. We use the fifth photo we take to determine the threshold for our detection part. Actually, we have improved the performance of our algorithms by implementing different versions of our codes, so I will go through each version and highlight the significant improvement in each step.
+            <br> 
+            <br>
+            <p style="margin-left:1em;">
+            <b>- First version with highest scores 14 </b>
+            <br>
+            The first version of our design is the slowest algorithm but with high accuracy. The idea is quite simple. Among all the steps in our implentation, deciding the values of a threshold is the trickiest part for our algorithm. In our first version of our algorithm, we stored the <font style="background-color:#E0E0E0">mean values</font> of intensities over the region of the first branches right above the head of the lumberman. The reason we use the mean values is because that at the beginning of the game, there is definitely no branch right above the head of the lumberman. Besides, the region right above the head of the lumberman contains lots of high-intensity values (white color with intensity 255), then the mean value at the site is high enough to differentiate the mean values for the intensities when there appears a branch (with green, black color which lower the intensity of the area). Therefore, we just need to calculate the differences between the mean values of the intensities of the specific region with the stored values at the beginning, and if the difference is larger than some value (we set 60 here) then we can know there is a branch. 
+            <br>
+            We used the <font style="background-color:#E0E0E0">time</font> module in Python as the timer to calculate how long does each function take when it executes in our algorithm to find out the bottleneck step which takes most time. After such operation, we found that the time for PiCamera to take a picture requires 0.2-0.4 secs while the calculation of the mean values and differences only takes a few milliseconds. In order to speed up the speeds of the capturing photos, we set the parameter <font style="background-color:#E0E0E0">use_video_port</font> <font color = "#7700BB">True</font> in the capturing method. However, unfortunately after this small improvement, it helped quite well - it can achieve 40 points, but the time is still too long.
+            <blockquote>
+                camera.capture(fileName, <i><font color = "#ff8800">use_video_port</font></i>=<font color = "#7700BB">True</font>)
+            </blockquote>
+            <br>
+            </p>
+            <p style="margin-left:1em;">
+            <b>- Second version</b>
+            <br>
+            In the Lumberman game app, time is a key factor to get high scores. When you response too late, the remaining time decays much quicker while if you tap quickly and correctly the remaining time will increase. So we did lots of improvements to speed up. Here are some efforts we've tried.
+            <br>
+            <p style="margin-left:2em;">
+            <b>Lower the resolution of the picture took</b>
+            <br>
+            We lowered the resolution then it can help to eliminate the number of pixels we need to consider about and make it faster to write in a file and read the image file. The resolution of the pictures for our lastest version is 160 * 120.
+            </p>
+            <p style="margin-left:2em;">
+            <b>Using in-memory streams to store the picture instead of storing in SD card.</b>
+            <br>
+            The other problem we think we encountered is SD card speed limitations. In other words, we  need to capture to something faster like a network port or in-memory streams. So we utilized the <font style="background-color:#E0E0E0">stream = io.BytesIO()</font> and turned the stream to PIL (Python Image Library) object for further image-processing. Although it can help speed up for a little (0.03 faster), the time is still too long.
+            <blockquote>
+                stream = io.BytesIO()
+                <br>
+                camera.capture(stream, <i><font color = "#ff8800">format</font></i>=<font color = "#01B468">'jpeg'</font>,<i><font color = "#ff8800">use_video_port</font></i>=<font color = "#7700BB">True</font>)
+                <br>
+                stream.seek(<font color = "#ff2610">0</font>)
+                <br>
+                image = Image.open(stream).convert(<i><font color = "#01B468">'L'</font></i>)
+                <br>
+                arr = np.fromiter(<font color = "#1c96f7">iter</font>(image.getdata()), np.uint8)
+                <br>
+                arr.resize(<font color = "#ff2610">120</font>, <font color = "#ff2610">160</font>)
+            </blockquote> 
+            </p>
+            <p style="margin-left:2em;">
+            <b>Tap several times after taking a picture (most significant)</b> <img src="img/star.png"><img src="img/star.png">
+            <br>
+            This idea is inspired by the generous TA - Jinyao Ren. He suggested that we can try to tap three times when we take a picture and it can help to speed up three times. We took his good advice and implement the algorithm to detect five branches at a time and tap five times accordingly. In this implementation, we encountered several challenges. 
+            <div style="text-align:center">
+            <img src="img/gameLayout.jpg">
+            </div>
+            The image shown above is the screenshot of Lumberman app. As you can see here, when we take the first image to determine the threshold values, we have to consider 10 sites and set thresholds for each site. But, how? First, we need to know if there is a branch at each area or not. Second, based on our analysis of the intensities of the images taken by PiCamera, the intensity values can vary a lot owing to the environmental lighting. Which results in different intensity values between not only different layers but also left-hand side and right-hand side. Therefore, as a small summary here, we need to assign different thresholds for each site.  
+
+            </p>
+            <br>
+            </p>
+
+            </ul>
+
+        </div>
+
+        <hr class="featurette-divider">
+        <!-- Fourth Featurette -->
+        <div class="featurette" id="results">
+            <img class="featurette-image img-circle img-responsive pull-right" src="img/result1.jpg">
+            <h2 class="featurette-heading">How Good
+                <span class="text-muted">We Achieved</span>
+            </h2>
+            <p class="lead">Raspberry Pi is an ideal platform to build a small robot. We get the idea from Lab3 which we can build a robotic car on a raspberry pi system by writing some controlling programming. But, in Lab3, our robot does not have “eyes”. So, here is our idea – we want to build up a robot with eyes and make it play some simple game apps, such as Lumberman. Lumberman is a mobile game app, where you need to avoid the branched when you chop the wood. We implemented the algorithm to detect where are thr branches and make our raspberry pi to chop the wood! </p>
+            <br>
+            
+            <p> Keyword: PiCamera, Image Processing, Raspberry Pi </p>
+
+        </div>
+
+        <hr class="featurette-divider">
+
+                <!-- Fourth Featurette -->
+        <div class="featurette" id="Code_Appendix">
+            <h2 class="featurette-heading">What we have created
+                <span class="text-muted">For this project</span>
+            </h2>
+            <p class="lead">Here is the code appendix for our project. We've created several versions of codes here.</p>
+            
+            <ul>
+
+            <p><b><li><span>First version - with highest scores as 14 points </span></li></b></p>
+            This version is our first trial, which runs slowly. The main bottle neck is the time for taking a picture. The progress of this algortithm is - take a picture, image-processing and then trigger the touch event. However, the picamera is initialized and turned on its configuration each time when it needs to capture a picture. Therefore it went slow.
+            <blockquote>
+###############################################################################
+<br>                                                                          
+# file:    runOnPy.py                                                        
+<br>                                                                          
+# authors: Wen-Yu Wang  - ww424                                               
+<br>
+#          Hanchen Jin  - hj424                                               
+<br>
+# date:    April 30th 2016                                                    
+<br>
+# brief:   Version1, use mean value of the intensity at specific areas to     
+<br>
+#          see if there is a branch. It runs really slow because picamra     
+<br>
+#          has to be turned on when each time it capture the picture.         
+<br>
+###############################################################################
+<br>
+<br>
+<br>
+### Imports ###################################################################
+<br>
+import picamera
+<br>
+from PIL import Image
+<br>
+import numpy as np
+<br>
+from scipy.misc import imread, imsave
+<br>
+import matplotlib.image as mpimg
+<br>
+import RPi.GPIO as GPIO
+<br>
+import os 
+<br>
+from time import sleep
+<br>
+<br>
+#### Detction of branch #######################################################
+<br>
+def detectBranch(site, value,thr):
+<br>
+&nbsp;&nbsp;if site == 0 and (thr - value ) > 0.06:
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return True
+<br>
+&nbsp;&nbsp;elif site == 1 and thr - value > 0.06:
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return True
+<br>
+&nbsp;&nbsp;else:
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return False 
+<br>
+<br>    
+#### Function that receive a photo and make a decision ########################
+<br>
+def play(camera, thLU,thRU):
+<br>
+&nbsp;&nbsp;# fileName: image name ; status: where to go ; 0 : go right, 1: go left
+<br>
+&nbsp;&nbsp;status = 1 
+<br>
+<br>
+&nbsp;&nbsp;while True: 
+<br>
+&nbsp;&nbsp;fileName = "image.jpg"
+<br>
+&nbsp;&nbsp;camera_width = 320
+<br>
+&nbsp;&nbsp;camera_height = 240
+<br>
+&nbsp;&nbsp;camera.resolution = (camera_width, camera_height)
+<br>
+&nbsp;&nbsp;camera.capture(fileName,format='jpeg')
+<br>
+&nbsp;&nbsp;image_data = imread(fileName)
+<br>
+&nbsp;&nbsp;#normalize image data to be between 0 -1 
+<br>
+&nbsp;&nbsp;image_dataN=image_data/255.
+<br>
+&nbsp;&nbsp;#Detect the branch by take average of intensity of the image at specific area
+<br>
+&nbsp;&nbsp;leftUp   =np.mean(image_dataN[36:48, 25:80])
+<br>
+&nbsp;&nbsp;rightUp  =np.mean(image_dataN[36:48, 150:200])
+<br>
+&nbsp;&nbsp;if status == 0 :
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if detectBranch(0,leftUp,thLU): 
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status = 1
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;doit(status)
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;else : 
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status = 0
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;doit(status)
+<br>
+&nbsp;&nbsp;else:
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if detectBranch(1,rightUp,thRU): 
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status = 0
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;doit(status)
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;else : 
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status = 1
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;doit(status)
+<br>
+<br>
+<br>
+#### GPIO output ##############################################################
+<br>
+def doit(status):
+<br>
+&nbsp;&nbsp;if status == 1:
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print("go Left")
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;GPIO.output(5,1)
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sleep(0.05)
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;GPIO.output(5,0)
+<br>        
+&nbsp;&nbsp;else:
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print("go right")
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;GPIO.output(6,1)
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sleep(0.05)
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;GPIO.output(6,0)
+<br>
+<br>
+#### Initialize PiCamera ######################################################
+<br>
+def main():
+<br>
+    #
+<br>
+&nbsp;&nbsp;GPIO.setmode(GPIO.BCM)
+<br>
+&nbsp;&nbsp;GPIO.setup(5,GPIO.OUT)
+<br>
+&nbsp;&nbsp;GPIO.setup(6,GPIO.OUT)
+<br>
+&nbsp;&nbsp;GPIO.output(5,0) 
+<br>
+&nbsp;&nbsp;GPIO.output(6,0)
+<br>    
+&nbsp;&nbsp;print("Initializing the camera .....")
+<br>
+    #initialize picamera
+<br>
+&nbsp;&nbsp;camera = picamera.PiCamera()
+<br>
+    # verizontal flip
+<br>
+&nbsp;&nbsp;camera.vflip = True
+<br>
+    # Capture the first pic to determine the threshold
+<br>
+&nbsp;&nbsp;camera_width = 320
+<br>
+&nbsp;&nbsp;camera_height = 240
+<br>
+&nbsp;&nbsp;camera.resolution = (camera_width, camera_height)
+<br>
+&nbsp;&nbsp;camera.capture("threshold.jpg",format='jpeg')
+<br>
+&nbsp;&nbsp;image_data = imread("threshold.jpg")
+<br>
+&nbsp;&nbsp;camera.capture("threshold.jpg",format='jpeg')
+<br>
+&nbsp;&nbsp;image_data = imread("threshold.jpg")
+<br>
+&nbsp;&nbsp;image_dataN=image_data/255.
+<br>
+<br>
+&nbsp;&nbsp;thLU = np.mean(image_dataN[36:48, 25:80])
+<br>
+&nbsp;&nbsp;thRU = np.mean(image_dataN[36:48, 150:200])
+<br>
+&nbsp;&nbsp;print("Initialization done! And Start to Play!")
+<br>
+&nbsp;&nbsp;play(camera, thLU,thRU)
+<br>
+&nbsp;&nbsp;print("Game Over")
+<br>
+<br>    
+<br>
+if __name__ == '__main__':
+<br>
+&nbsp;&nbsp;main()
+<br>
+            </blockquote>
+
+             </p>
+
+
+
+
+            </ul>
+           
+
+        </div>
+
+        <hr class="featurette-divider">
+
+        <div class="featurette" id="Conclusion">
+            <img class="featurette-image img-circle img-responsive pull-left" src="http://placehold.it/500x500">
+            <h2 class="featurette-heading">At last, 
+                <span class="text-muted">We want to say ...</span>
+            </h2>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <p class="lead">This project is lots of fun and challenging!! At first, the motivation for this project is that we want to build a system that can help us to play with the game and get high scores. </p>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <font size = "4"><b> Authors </b></font>
+            <br>
+            <br>
+            <img src = "img/wenyu.png"> 
+            <font size = "4"> Wen-Yu Wang (ww424) : <br>In charge of software part, including the detection of branches and the template of report. She loves this project and she thinks this project is the most interesting project she has worked during her student life. In this project, she thinks they have learned how to developing a "project" and how to solve problems systematically. :) Thanks professor and course staffs for the helpful advices. She also appreciated her partner for the good team-work along the whole semester.</font>
+            <br>
+            <img src = "img/hj424.png"> 
+            <font size = "4"> Hanchen Jin (hj424) : <br>In charge of hardware part, including the circuit design and the connection of the GPIO. </font>
+
+            
+
+        </div>
+        <hr class="featurette-divider">
+
+        <!-- Footer -->
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Copyright &copy; Wen-Yu Wang (ww424) & Hanchen Jin (hj424) 2016</p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+    <!-- /.container -->
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+</body>
+
+</html>
