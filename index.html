@@ -73,6 +73,9 @@
                     <li>
                         <a href="#Conclusion">Conclusion</a>
                     </li>
+                    <li>
+                        <a href="#acknowledgement">Acknowledgement</a>
+                    </li>
 
                 </ul>
             </div>
@@ -245,7 +248,6 @@
             <img src="img/platform3.jpg">
             <img src="img/platform4.jpg">
             </div>
-            <p><b><li><span>Hardware Design</span></li></b></p>
             <p><b><li><span>Software Design</span></li></b></p>
             <div style="text-align:center">
             <img src="img/schematicForsoft.jpg">
@@ -254,11 +256,11 @@
             <br> 
             <br>
             <p style="margin-left:1em;">
-            <b>- First version with highest scores 14 </b>
+            <b>- First version with highest scores 40  </b>
             <br>
-            The first version of our design is the slowest algorithm but with high accuracy. The idea is quite simple. Among all the steps in our implentation, deciding the values of a threshold is the trickiest part for our algorithm. In our first version of our algorithm, we stored the <font style="background-color:#E0E0E0">mean values</font> of intensities over the region of the first branches right above the head of the lumberman. The reason we use the mean values is because that at the beginning of the game, there is definitely no branch right above the head of the lumberman. Besides, the region right above the head of the lumberman contains lots of high-intensity values (white color with intensity 255), then the mean value at the site is high enough to differentiate the mean values for the intensities when there appears a branch (with green, black color which lower the intensity of the area). Therefore, we just need to calculate the differences between the mean values of the intensities of the specific region with the stored values at the beginning, and if the difference is larger than some value (we set 60 here) then we can know there is a branch. 
+            The first version of our design is the slowest algorithm but with high accuracy. The idea is quite simple. Among all the steps in our implementation, deciding the values of a threshold is the trickiest part for our algorithm. In our first version of our algorithm, we stored the <font style="background-color:#E0E0E0">mean values</font> of intensities over the region of the first branches right above the head of the lumberman. The reason we use the mean values is because that at the beginning of the game, there is definitely no branch right above the head of the lumberman. Besides, the region right above the head of the lumberman contains lots of high-intensity values (white color with intensity 255), then the mean value at the site is high enough to differentiate the mean values for the intensities when there appears a branch (with green, black color which lower the intensity of the area). Therefore, we just need to calculate the differences between the mean values of the intensities of the specific region with the stored values at the beginning, and if the difference is larger than some value (we set 60 here) then we can know there is a branch. 
             <br>
-            We used the <font style="background-color:#E0E0E0">time</font> module in Python as the timer to calculate how long does each function take when it executes in our algorithm to find out the bottleneck step which takes most time. After such operation, we found that the time for PiCamera to take a picture requires 0.2-0.4 secs while the calculation of the mean values and differences only takes a few milliseconds. In order to speed up the speeds of the capturing photos, we set the parameter <font style="background-color:#E0E0E0">use_video_port</font> <font color = "#7700BB">True</font> in the capturing method. However, unfortunately after this small improvement, it helped quite well - it can achieve 40 points, but the time is still too long.
+            We used the <font style="background-color:#E0E0E0">time</font> module in Python as the timer to calculate how long does each function take when it executes in our algorithm to find out the bottleneck step which takes the most time. After such operation, we found that the time for PiCamera to take a picture requires 0.2-0.4 secs while the calculation of the mean values and differences only takes a few milliseconds. In order to speed up the speeds of the capturing photos, we set the parameter <font style="background-color:#E0E0E0">use_video_port</font> <font color = "#7700BB">True</font> in the capturing method. However, unfortunately after this small improvement, it helped quite well - it can achieve 40 points (previous 14 points), but the time is still too long.
             <blockquote>
                 camera.capture(fileName, <i><font color = "#ff8800">use_video_port</font></i>=<font color = "#7700BB">True</font>)
             </blockquote>
@@ -272,7 +274,23 @@
             <p style="margin-left:2em;">
             <b>Lower the resolution of the picture took</b>
             <br>
-            We lowered the resolution then it can help to eliminate the number of pixels we need to consider about and make it faster to write in a file and read the image file. The resolution of the pictures for our lastest version is 160 * 120.
+            We lowered the resolution then it can help to eliminate the number of pixels we need to consider about and make it faster to write in a file and read the image file. The resolution of the pictures for our latest version is 160 * 120.
+            </p>
+            <p style="margin-left:2em;">
+            <b>Isolate a CPU core and try to eliminate latency from CPU</b>
+            <br>
+            We referred to LectureNote 35 and tried to reduce the latency from CPU by isolating a CPU core. We set the configuration like the instruction following:
+            <blockquote>
+                Add 'isolcpus=3' to /boot/cmdline.txt
+            </blockquote>
+            </p>
+            <p style="margin-left:2em;">
+            After that, everytime we run our python script, we type the following to run our code.
+            <blockquote>
+                Taskset –c 3 python fileName.py
+            </blockquote></p>
+            <p style="margin-left:2em;">
+            This is a good way to reduce the latency from the system and it can help to speed up for 0.03 - 0.04 seconds.
             </p>
             <p style="margin-left:2em;">
             <b>Using in-memory streams to store the picture instead of storing in SD card.</b>
@@ -303,15 +321,45 @@
             <div style="text-align:center">
             <img src="img/gamelayout2.jpg">
             </div>
-            With this modified detection method and good hardward part for tapping the capacitive screen of our mobile phone, our raspberry pi can score with 2855 - a really high new record! But there is still another issue here, that is the threshold setting is optimally designed for the red background of the game. This game contains three kinds of background, it is required to have different detection method for our algorithm. 
+            With this modified detection method and good hardware part for tapping the capacitive screen of our mobile phone, our raspberry pi can score with 2855 - a really high new record! But there is still another issue here, that is the threshold setting is optimally designed for the red background of the game. This game contains three kinds of background, it is required to have different detection method for our algorithm. 
             </p>
             <br>
             <div style="text-align:center">
             <font size = "5"> Come join us and see if you can beat our raspberry pi!! </font>
             </div>
             </p>
+			<p><b><li><span>Hardware Design</span></li></b></p>
+			So after the Pi Game player finish the process of taking photos and detecting branches, it is time to build "hands" for it to tap on the screen. Instead of using expensive robetic arms, we build circuits using eletrical switches to trigger the tapping on the touch screen on our cellphone. Key points are building pads for contacting with the touch screen, circuits for controlling the tapping by nomrmal switches, circuits for controlling the tapping by GPIO pulses and the test of the minimum tapping time.
+			<br>
+			(1) Tapping pads
+			<br>
+			The basic principle for tapping on the capacitive touch screen is to draw small amount of eletrons from the screen. For example, when people touch the screen with fingers, they are able to draw some electrons by the circuit loop from the cell phone to the ground since people has a capacitance about 30pF~50pF. Thus for triggering a tap on the capacitive touch screen, conductor with a certain magnitude of capacitance is required.
+			<br>
+			Firstly we use several layers of copper tap to build the tapping pads. After many experienments, we found that the capcitance of ten layers copper tap is good to trigger the tapping accurately. However, a deadly defect of the copper tap pad is that it is unstable and hardly be reuesd. It performs really good at the first time, but next time we re-stick the pad on the screen, it is not as sensitive as before. The reason is obvious. The process of tearing off from the screen slightly changes the space among each layers thus intensely alters its capacitance. It is quite annoying that we have to re-build two pads for each labs. So we decide to find another stable methods to build these two pads.
+			<br>
+			Then we found the one cent coin (copper foil) can also serve as a good pad for triggering the touch. Furthermore, within the wire soldered on it, it contacts really well and very stable. Here is picture which shows these two kinds of pads, the left one is built by the copper tap and the right one is built by the one cent coin. One tricky thing here is that the distance between the pad and the screen should be very small. So everytime when we restart our work, we have to bind the pads tightly on the screen by powerful tapes or else the sensitivity will be severely influenced which leads to higher probability of miss touch.
+			<br>
+				<div style="text-align:center">
+                <img src = "img/electrodes.jpg">
+                </div>
+			<br>
+			(2) Circuits using normal switches
+			<br>
+			After resolving the problem of stable pads for touching the screen, a simple current loop for testing its basic function is essential. Since the other side of the pad has to connecte to the ground (the back of the cell phone), a ground platform made by tinfoil with the same size of our cell phone helps the connection bwtween the other side of the wire and the back of our cell phone. As the following picture shows, with the proper phone case, it contacts pretty good.Then the pad and the ground is connected separately on the two side of a switch. By successfully trigger the tapping by normal switches, it is time to move on eletric switches.
+			<br>
+				<div style="text-align:center">
+                <img src = "img/ground.jpg">
+                </div>
+			<br>
+			(3) Eletric switches
+			<br>
+			
+			<br>
+			(4) Tapping time requirement
+			
 
             </ul>
+			
 
         </div>
 
@@ -337,7 +385,38 @@
                 <span class="text-muted">For this project</span>
             </h2>
             <p class="lead">Here is the code appendix for our project. We've created several versions of codes here.</p>
-            
+            <br>
+
+            <font size = "4"><b> Parts List </b></font>
+
+             <table style="border: 2px solid rgb(148, 201, 255); height: 120px; background-color: rgb(242, 247, 247); width: 350px;" align="center" cellpadding="2" cellspacing="5" frame="border" rules="row">
+                <tbody>
+                    <tr>
+                        <td><b> Name</b></td>
+                        <td><b>Price</b></td>
+                        <td><b>Quantity</b></td>
+                    </tr>
+                    <tr>
+                        <td> Raspberry Pi2 B+ </td>
+                        <td>35$</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td> PiCamera Board Module</td>
+                        <td>19$</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td> Wires</td>
+                        <td>Stock in Lab</td>
+                        <td>some</td>
+                    </tr>
+                    </tbody>
+            </table>
+
+            <br>
+            <br>
+            <font size = "4"><b> Codes </b></font>
             <ul>
 
             <p><b><li><span>First version - with highest scores as 14 points </span></li></b></p>
@@ -385,8 +464,6 @@ def detectBranch(site, value,thr):
 def play(camera, thLU,thRU):
     # fileName: image name ; status: where to go ; 0 : go right, 1: go left
     status = 1 
-    pre = 0
-    cur = 1
 
     while True: 
         fileName = "image.jpg"
@@ -400,8 +477,6 @@ def play(camera, thLU,thRU):
         #Detect the branch by take average of intensity of the image at specific area
         leftUp   =np.mean(image_dataN[36:48, 25:80])
         rightUp  =np.mean(image_dataN[36:48, 150:200])
-        cur = (leftUp+rightUp)
-        if pre == cur: break;
         if status == 0 :
             if detectBranch(0,leftUp,thLU): 
                 status = 1
@@ -417,7 +492,6 @@ def play(camera, thLU,thRU):
             else : 
                 status = 1
                 doit(status)
-        pre = cur
 
 #### GPIO output ##############################################################
 def doit(status):
@@ -604,7 +678,7 @@ if __name__ == '__main__':
         <hr class="featurette-divider">
 
         <div class="featurette" id="Conclusion">
-            <img class="featurette-image img-circle img-responsive pull-left" src="http://placehold.it/500x500">
+            <img class="featurette-image img-circle img-responsive pull-left" src="img/we.jpg">
             <h2 class="featurette-heading">At last, 
                 <span class="text-muted">We want to say ...</span>
             </h2>
@@ -629,11 +703,20 @@ if __name__ == '__main__':
             <br>
             <br>
             <img src = "img/wenyu.png"> 
-            <font size = "4"> Wen-Yu Wang (ww424) : <br>In charge of software part, including the detection of branches and the template of report. She loves this project and she thinks this project is the most interesting project she has worked during her student life. In this project, she thinks they have learned how to developing a "project" and how to solve problems systematically. :) Thanks professor and course staffs for the helpful advices. She also appreciated her partner for the good team-work along the whole semester. Besides, she wanted to give a special thanks to her boyfriend for the creative idea for this project :)</font>
+            <font size = "4"> Wen-Yu Wang (ww424) : <br>In charge of software part, including the detection of branches and the template of report. She loves this project and she thinks this project is the most interesting project she has worked during her student life. In this project, she thinks they have learned how to developing a "project" and how to solve problems systematically. )</font>
             <br>
             <img src = "img/hj424.png"> 
             <font size = "4"> Hanchen Jin (hj424) : <br>In charge of hardware part, including the circuit design and the connection of the GPIO. </font>
 
+        </div>
+        <hr class="featurette-divider">
+
+            <div class="featurette" id="acknowledgement">
+            <img class="featurette-image img-circle img-responsive pull-right" src="img/CourseStaff.jpg">
+            <h2 class="featurette-heading">Acknowledgement 
+            </h2>
+
+            <p class="lead">Thanks professor and course staffs for the helpful advices. In the process of developing this project, professor Joe gave us lots of useful information and cared about us very much. We really appreciated that. And the advices from TAs were helped as well. Thanks for your efforts and made this project more perfect. Besides, Wen-Yu wanted to give a special thank to her boyfriend for the creative idea for this project :) </p>
             
 
         </div>

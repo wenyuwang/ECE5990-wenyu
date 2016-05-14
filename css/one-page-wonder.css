@@ -12,7 +12,7 @@ body {
     display: block;
     width: 100%;
     text-align: center;
-    background: url('https://scontent-yyz1-1.xx.fbcdn.net/v/t1.0-9/11846638_870235293061992_2751596023842465193_n.jpg?oh=16fc327f17642ea167804416c3f1c192&oe=579B6EC1') no-repeat center center scroll;
+    background: url('../img/coverphoto.jpg') no-repeat center center scroll;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     background-size: cover;
