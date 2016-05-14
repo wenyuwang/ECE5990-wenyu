@@ -271,6 +271,7 @@
             <br>
             In the Lumberman game app, time is a key factor to get high scores. When you response too late, the remaining time decays much quicker while if you tap quickly and correctly the remaining time will increase. So we did lots of improvements to speed up. Here are some efforts we've tried.
             <br>
+            </p>
             <p style="margin-left:2em;">
             <b>Lower the resolution of the picture took</b>
             <br>
@@ -314,16 +315,33 @@
             <b>Tap several times after taking a picture (most significant)</b> <img src="img/star.png"><img src="img/star.png">
             <br>
             This idea is inspired by the generous TA - Jinyao Ren. He suggested that we can try to tap three times when we take a picture and it can help to speed up three times. We took his good advice and implement the algorithm to detect five branches at a time and tap five times accordingly. In this implementation, we encountered several challenges. 
+            </p>
             <div style="text-align:center">
             <img src="img/gameLayout.jpg">
             </div>
+            <p style="margin-left:2em;">
             The image shown above is the screenshot of Lumberman app. As you can see here, when we take the first image to determine the threshold values, we have to consider 10 sites and set thresholds for each site. But, how? First, we need to know if there is a branch at each area or not. Second, based on our analysis of the intensities of the images taken by PiCamera, the intensity values can vary a lot owing to the environmental lighting condition. Which results in different intensity values between not only different layers but also left-hand side and right-hand side. Therefore, as a small summary here, we need to assign different thresholds for each site. We tried different methods to determine the thresholds and improve accuracy. Like using minimum values - because if there is a branch, it would contain the black color in the area and the intensity is 0. However as we said earlier in this session, due to various environment lighting condition, the intensities at different regions are not consistent. Using minimum or maximum can not reach high accuracy for detection a branch. At last, we came up with a great idea about this, that is using <font style="background-color:#E0E0E0">"variance"</font> values over the regions for branches. Since in the case that if there is no branch at site 1,2,3,4, the background is uniform, and the variance of the intensity values at these areas is small. When there exists a branch, the variance of the intensity values can by a large value! So in lastet version of our design, the detection method for site 0 is to find out the <font style="background-color:#E0E0E0">differences</font> between the original image and each image we take for tapping event; the detection method for site 1,2,3,4 is to use <font style="background-color:#E0E0E0">variances</font> as our threshold - if the variance at the specific area is larger than some value (we set 300 here) and it means there exists a branch. Furthermore, to fit this new detection method, we need to carefully decide the region we want to detect due to some unexpected situations - such as the screen pops up "Level x" when you reach Level x and the time-remaining strip affects the detection as well. The image shown below is the regions we decide to detect the branches.
+            </p>
             <div style="text-align:center">
             <img src="img/gamelayout2.jpg">
             </div>
+            <p style="margin-left:2em;">
             With this modified detection method and good hardware part for tapping the capacitive screen of our mobile phone, our raspberry pi can score with 2855 - a really high new record! But there is still another issue here, that is the threshold setting is optimally designed for the red background of the game. This game contains three kinds of background, it is required to have different detection method for our algorithm. 
             </p>
+            <p style="margin-left:1em;">
+            <b>- Challenges for different background</b>
             <br>
+            Another interesting challenges worth noted is that: in Lamberman game app there are three different background settings! This contributes to different relative values between the intensities of background and foreground, and we need to customize our code to fit in different situations.
+            <div style="text-align:center">
+            <img src="img/bk_red.png">
+            <img src="img/bk_blue.png">
+            <img src="img/bk_green.png">
+            </div>
+            <br>
+            </p>
+            <p style="margin-left:1em;">
+            In order to deal with the issue of different background color, we analyzed the pictures before writing our code. We wrote a small helper function to help us to calculate the intensity values. We found some interesting things. First, for red background, it's easy to differentiate the branches (green) and background (red), so it is quite accurate when we utilized the variances among intensity values over the pictures. However, for the other two background settings, it's more difficult to differentiate background from foreground when we calculated the variances for intensity values over RGB. Therefore, we explored more by seperating the intensity to three layers (R,G,B), and we found that if we only extract the intensity from <font style="background-color:#E0E0E0">green level</font>, the area with branch and without area are easily recognized from the calculations! That is, after extracting the G intensity values from RGB, the variance values when there is no branch will reduce to less than 100, while the variance can roared to larger than 200 when there is a branch. The reason results in this situation is that for the other two background settings, the green values contribute a lot in RGB with small R and B, and if we do calculation by averaging RGB, it would enhance the variances owing to the big gap among these three layers. And if we only take care of G values, the high influence of less-related R valus and B values can be reduced and the variance values can be obviously told apart from the site with a branch or without a branch.
+            </p>
             <div style="text-align:center">
             <font size = "5"> Come join us and see if you can beat our raspberry pi!! </font>
             </div>
