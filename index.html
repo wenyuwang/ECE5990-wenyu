@@ -347,34 +347,41 @@
             </div>
             </p>
 			<p><b><li><span>Hardware Design</span></li></b></p>
-			So after the Pi Game player finish the process of taking photos and detecting branches, it is time to build "hands" for it to tap on the screen. Instead of using expensive robetic arms, we build circuits using eletrical switches to trigger the tapping on the touch screen on our cellphone. Key points are building pads for contacting with the touch screen, circuits for controlling the tapping by nomrmal switches, circuits for controlling the tapping by GPIO pulses and the test of the minimum tapping time.
+			So after the Pi Game player finishes the process of taking photos and detecting branches, it is time to build "hands" for it to tap on the screen. Instead of using expensive robotic arms, we build circuits using electrical switches to trigger the tapping on the touch screen on our smartphone. Key points are building pads for contacting with the touch-screen, circuits for controlling the tapping by normal switches, circuits for controlling the tapping by GPIO pulses and the test of the minimum tapping time. 
 			<br>
-			(1) Tapping pads
+			<b>(1) Tapping pads</b>
 			<br>
-			The basic principle for tapping on the capacitive touch screen is to draw small amount of eletrons from the screen. For example, when people touch the screen with fingers, they are able to draw some electrons by the circuit loop from the cell phone to the ground since people has a capacitance about 30pF~50pF. Thus for triggering a tap on the capacitive touch screen, conductor with a certain magnitude of capacitance is required.
+			The basic principle for tapping on the capacitive touch screen is to draw a few electrons from the screen. For example, when people touch the screen with fingers, they are able to draw some electrons by the circuit loop from the cell phone to the ground since people has a capacitance about 30pF~50pF. Thus for triggering a tap on the capacitive touch screen, conductor with a certain magnitude of capacitance is required. 
 			<br>
-			Firstly we use several layers of copper tap to build the tapping pads. After many experienments, we found that the capcitance of ten layers copper tap is good to trigger the tapping accurately. However, a deadly defect of the copper tap pad is that it is unstable and hardly be reuesd. It performs really good at the first time, but next time we re-stick the pad on the screen, it is not as sensitive as before. The reason is obvious. The process of tearing off from the screen slightly changes the space among each layers thus intensely alters its capacitance. It is quite annoying that we have to re-build two pads for each labs. So we decide to find another stable methods to build these two pads.
+			Firstly we use several layers of copper tap to build the tapping pads. After many experiments, we found that the capacitance of ten layers copper tap is good to trigger the tapping accurately. However, a deadly defect of the copper tap pad is that it is unstable and hardly be reused. It performs really good at the first time, but next time we re-stick the pad on the screen, it is not as sensitive as before. The reason is obvious. The process of tearing off from the screen slightly changes the space among each layer thus intensely alters its capacitance. It is quite annoying that we have to re-build two pads for each lab. So we decide to find other stable methods to build these two pads. 
 			<br>
-			Then we found the one cent coin (copper foil) can also serve as a good pad for triggering the touch. Furthermore, within the wire soldered on it, it contacts really well and very stable. Here is picture which shows these two kinds of pads, the left one is built by the copper tap and the right one is built by the one cent coin. One tricky thing here is that the distance between the pad and the screen should be very small. So everytime when we restart our work, we have to bind the pads tightly on the screen by powerful tapes or else the sensitivity will be severely influenced which leads to higher probability of miss touch.
+			Then we found the one cent coin (copper foil) can also serve as a good pad for triggering the touch. Furthermore, within the wire soldered on it, it contacts really well and very stable. Here is the picture which shows these two kinds of pads, the left one is built by the copper tap and the right one is built by the one cent coin. One tricky thing here is that the distance between the pad and the screen should be very small. So every time when we restart our work, we have to bind the pads tightly on the screen by powerful tapes or else the sensitivity will be severely influenced which leads to higher probability of missing touches. 
 			<br>
 				<div style="text-align:center">
                 <img src = "img/electrodes.jpg">
                 </div>
 			<br>
-			(2) Circuits using normal switches
+			<b>(2) Circuits using normal switches</b>
 			<br>
-			After resolving the problem of stable pads for touching the screen, a simple current loop for testing its basic function is essential. Since the other side of the pad has to connecte to the ground (the back of the cell phone), a ground platform made by tinfoil with the same size of our cell phone helps the connection bwtween the other side of the wire and the back of our cell phone. As the following picture shows, with the proper phone case, it contacts pretty good.Then the pad and the ground is connected separately on the two side of a switch. By successfully trigger the tapping by normal switches, it is time to move on eletric switches.
+			After resolving the problem of stable pads for touching the screen, a simple current loop for testing its basic function is essential. Since the other side of the pad has to be connected to the ground (the back of the cell phone), a ground platform made by tinfoil with the same size of our cell phone helps the connection between the other side of the wire and the back of our cell phone. As the following picture shows, with the proper phone case, it contacts pretty well.Then the pad and the ground is connected separately on the two side of a switch. There is also a circuit shows this connection. By successfully trigger the tapping by normal switches, it is time to move on electric switches.
 			<br>
 				<div style="text-align:center">
                 <img src = "img/ground.jpg">
+				<img src = "img/circuit_v1.jpg">
                 </div>
 			<br>
-			(3) Eletric switches
+			<b>(3) Eletric switches</b>
 			<br>
-			
+			As for the Pi Game Player, it can not perform the "touch" actions like human beings. What it can do is output pulses through GPIO pins. So we build two electric switches by H11F1.
 			<br>
-			(4) Tapping time requirement
-			
+				<div style="text-align:center">
+				<img src = "img/circuit_v2.jpg">
+                </div>
+			<br>
+			<br>
+			<b>(4) Tapping time requirement</b>
+			<br>
+			Finally, we write a basic python script for testing the output with these electric switches. This code is also in the code appendix. The basic aim of this script is to test whether these two coins can correctly trigger the tapping. From the analysis in last part, the sleep time between the high-level and low-level output is the minimum time required for the tapping. Even if Raspberry Pi is able to touch the screen in really fast speed (in a magnitude of us), the capacitive touch screen is unable to detect that kind of fast touch. Some time is required for drawing some electrons from the touch screen and calculating the position of the touching point. In general, capacitive touch screen is able to finish this process in 3ms. But actually, we are using coins and electric switches as tapping medium so that time for drawing a few electrons may become longer. After continuous testing, we found that 0.03s is required for triggering a correct touch.
 
             </ul>
 			
@@ -415,7 +422,7 @@
                         <td><b>Quantity</b></td>
                     </tr>
                     <tr>
-                        <td> Raspberry Pi2 B+ </td>
+                        <td> Raspberry Pi2 B </td>
                         <td>35$</td>
                         <td>1</td>
                     </tr>
