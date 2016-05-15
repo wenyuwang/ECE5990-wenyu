@@ -62,13 +62,16 @@
                         <a href="#setting_up">Set Up</a>
                     </li>
                     <li>
-                        <a href="#System_Design">System Design</a>
+                        <a href="#System_Design">Design</a>
                     </li>
                     <li>
                         <a href="#results">Results</a>
                     </li>
+					 <li>
+                        <a href="#further_improvement">Improvements</a>
+                    </li>
                     <li>
-                        <a href="#Code_Appendix">Code Appendix</a>
+                        <a href="#Code_Appendix">Appendix</a>
                     </li>
                     <li>
                         <a href="#Conclusion">Conclusion</a>
@@ -124,10 +127,10 @@
             <h2 class="featurette-heading">Get to know
                 <span class="text-muted">Our Idea</span>
             </h2>
-            <p class="lead">Raspberry Pi is an ideal platform to build a small robot. We get the idea from Lab3 which we can build a robotic car on a raspberry pi system by writing some controlling programming. But, in Lab3, our robot does not have “eyes”. So, here is our idea – we want to build up a robot with eyes and make it play some simple game apps, such as Lumberman. Lumberman is a mobile game app, where you need to avoid the branched when you chop the wood. We implemented the algorithm to detect where are the branches and make our raspberry pi to chop the wood! </p>
+            <p class="lead">Raspberry Pi is an ideal platform to build a small robot. We get the idea from Lab3 which we can build a robotic car on a raspberry pi system by writing some controlling programming. But, in Lab3, our robot does not have “eyes”. So, here is our idea – we want to build up a robot with eyes and make it play some simple game apps, such as Lumberman. Lumberman is a mobile game app, where you need to avoid the branched when you chop the wood. We implemented the algorithm to detect where the branches are and make our raspberry pi to chop the wood happily! </p>
             <br>
             
-            <font size="4">Keyword: PiCamera, Image Processing, Raspberry Pi </font>
+            <font size="4">Keyword: Raspberry Pi, PiCamera, Image Processing, GPIO output control</font>
 
         </div>
 
@@ -215,6 +218,11 @@
             <blockquote>
                 $ sudo pip install Pillow
             </blockquote>
+			<br>
+			<b>Tips:</b> The total size of these libraries is about <font style="background-color:#E0E0E0">2.2G</font>. But since you have to download the compressed file and then unzip them, the total free space required on your disk/SD card is about <font style="background-color:#E0E0E0">3G</font>. Be sure you have enough space before you start downloading. To check the space availble on your curren Linux system, following command can be used: 
+			<blockquote>
+                $ df -h
+            </blockquote>
             </p>
             </ul>
 
@@ -229,7 +237,7 @@
                 <span class="text-muted">work together :)</span>
             </h2>
             <br>
-            <p class="lead">Our project can be split to three categories: platform design, hardware design and software design. Platform design is to provide the spaces for our smartphone and the raspberry pi, also, make sure the relative position of the camera and our smartphone can be fixed. As for hardware design, we are building the "hands" for the raspberry pi to invoke the touch events on the capacity screen of the smartphone when it needs to move to the other side. Last but not the least, the software part- this part can be analogous as the mind of our raspberry pi. We used the image-processing algorithm to detect the branches and decide where to chop the woods on the screen. This project is lots of fun! Join us and see what each part works by scrolling down!  </p>
+            <p class="lead">Our project can be split to three categories: platform design, hardware design and software design. Platform design is to provide the spaces for our smartphone and the raspberry pi, also, make sure the relative position of the camera and our smartphone can be fixed. As for hardware design, we are building the "hands" for the raspberry pi to invoke the touch events on the capacity screen of the smartphone when it needs to move to the other side. Last but not least, the software part- this part can be analogous as the mind of our raspberry pi. We apply the image-processing algorithm to detect the branches and decide where to chop the woods on the screen. This project is lots of fun! Join us and see how each part works by scrolling down!  </p>
             <br>
             <br>
             <br>
@@ -237,7 +245,7 @@
             <ul>
 
             <p><b><li><span>Platform Design</span></li></b></p>
-            For platform design, we used LEGO to build our architecture. With the flexibility of LEGO, we can rebuild the platform anytime we want when it's not fit for our project. On this platform, we built several spaces for different parts. Mobile phone, raspberry pi and the breadboard all have their specific areas to be at, and it can help us to fix the relative distance from the picamera and mobile phone. Therefore, we can eliminate some uncertainties and make it more easier to implement the image processing algorithm.  
+            For the platform design, we used LEGO to build our architecture. With the flexibility of LEGO, we can rebuild the platform anytime we want when it's not fit for our aim. On this platform, we built several spaces for different parts. Mobile phone, raspberry pi and the breadboard all have their specific areas to put in. More importantly, it can help us to fix the relative distance from the picamera and mobile phone. By this proper platform, we can eliminate some uncertainties when we restart our work each time thus make it more easier to implement the image processing algorithm.  
             <br>
             <br>
             <div style="text-align:center">
@@ -260,7 +268,7 @@
             <br>
             The first version of our design is the slowest algorithm but with high accuracy. The idea is quite simple. Among all the steps in our implementation, deciding the values of a threshold is the trickiest part for our algorithm. In our first version of our algorithm, we stored the <font style="background-color:#E0E0E0">mean values</font> of intensities over the region of the first branches right above the head of the lumberman. The reason we use the mean values is because that at the beginning of the game, there is definitely no branch right above the head of the lumberman. Besides, the region right above the head of the lumberman contains lots of high-intensity values (white color with intensity 255), then the mean value at the site is high enough to differentiate the mean values for the intensities when there appears a branch (with green, black color which lower the intensity of the area). Therefore, we just need to calculate the differences between the mean values of the intensities of the specific region with the stored values at the beginning, and if the difference is larger than some value (we set 60 here) then we can know there is a branch. 
             <br>
-            We used the <font style="background-color:#E0E0E0">time</font> module in Python as the timer to calculate how long does each function take when it executes in our algorithm to find out the bottleneck step which takes the most time. After such operation, we found that the time for PiCamera to take a picture requires 0.2-0.4 secs while the calculation of the mean values and differences only takes a few milliseconds. In order to speed up the speeds of the capturing photos, we set the parameter <font style="background-color:#E0E0E0">use_video_port</font> <font color = "#7700BB">True</font> in the capturing method. However, unfortunately after this small improvement, it helped quite well - it can achieve 40 points (previous 14 points), but the time is still too long.
+            The lumberman chop the tree with correctly dodging the branches but the speed is really low so that time run out after about 14 chops (14 points). We guess the slowest process is about taking a photo but we want to do some accurate calculation. So we used the <font style="background-color:#E0E0E0">time</font> module in Python as the timer to calculate how long does each function take when it executes in our algorithm to find out the bottleneck step which takes the most time. After such operation, we found that the time for PiCamera to take a picture requires 0.2-0.4 secs while the calculation of the mean values and differences only takes a few milliseconds. In order to speed up the speeds of the capturing photos, we set the parameter <font style="background-color:#E0E0E0">use_video_port</font> <font color = "#7700BB">True</font> in the capturing method. However, unfortunately after this small improvement, it helped quite well - it can achieve 40 points, but the time for taking photos is still too long.
             <blockquote>
                 camera.capture(fileName, <i><font color = "#ff8800">use_video_port</font></i>=<font color = "#7700BB">True</font>)
             </blockquote>
@@ -269,7 +277,7 @@
             <p style="margin-left:1em;">
             <b>- Second version</b>
             <br>
-            In the Lumberman game app, time is a key factor to get high scores. When you response too late, the remaining time decays much quicker while if you tap quickly and correctly the remaining time will increase. So we did lots of improvements to speed up. Here are some efforts we've tried.
+            In the Lumberman game app, time is a key factor to get high scores. When you response too slow, the remaining time decays much quicker while if you tap quickly and correctly the remaining time will increase. So we did lots of improvements to speed up. Here are some efforts we've tried.
             <br>
             </p>
             <p style="margin-left:2em;">
@@ -320,7 +328,7 @@
             <img src="img/gameLayout.jpg">
             </div>
             <p style="margin-left:2em;">
-            The image shown above is the screenshot of Lumberman app. As you can see here, when we take the first image to determine the threshold values, we have to consider 10 sites and set thresholds for each site. But, how? First, we need to know if there is a branch at each area or not. Second, based on our analysis of the intensities of the images taken by PiCamera, the intensity values can vary a lot owing to the environmental lighting condition. Which results in different intensity values between not only different layers but also left-hand side and right-hand side. Therefore, as a small summary here, we need to assign different thresholds for each site. We tried different methods to determine the thresholds and improve accuracy. Like using minimum values - because if there is a branch, it would contain the black color in the area and the intensity is 0. However as we said earlier in this session, due to various environment lighting condition, the intensities at different regions are not consistent. Using minimum or maximum can not reach high accuracy for detection a branch. At last, we came up with a great idea about this, that is using <font style="background-color:#E0E0E0">"variance"</font> values over the regions for branches. Since in the case that if there is no branch at site 1,2,3,4, the background is uniform, and the variance of the intensity values at these areas is small. When there exists a branch, the variance of the intensity values can by a large value! So in lastest version of our design, the detection method for site 0 is to find out the <font style="background-color:#E0E0E0">differences</font> between the original image and each image we take for tapping event; the detection method for site 1,2,3,4 is to use <font style="background-color:#E0E0E0">variances</font> as our threshold - if the variance at the specific area is larger than some value (we set 300 here) and it means there exists a branch. Furthermore, to fit this new detection method, we need to carefully decide the region we want to detect due to some unexpected situations - such as the screen pops up "Level x" when you reach Level x and the time-remaining strip affects the detection as well. The image shown below is the regions we decide to detect the branches.
+            The image shown above is the screenshot of Lumberman app. As you can see here, when we take the first image to determine the threshold values, we have to consider 10 sites and set thresholds for each site. But, how? Firstly, we need to know if there is a branch at each area or not. Secondly, based on our analysis of the intensities of the images taken by PiCamera, the intensity values can vary a lot owing to the environmental lighting condition. Which results in different intensity values between not only different layers but also left-hand side and right-hand side. Therefore, as a small summary here, we need to assign different thresholds for each site. We tried different methods to determine the thresholds and improve accuracy. Like using minimum values - because if there is a branch, it would contain the black color in the area and the intensity is 0. However as we said earlier in this session, due to various environment lighting condition, the intensities at different regions are not consistent. Using minimum or maximum can not reach high accuracy for detection a branch. At last, we came up with a great idea about this, that is using <font style="background-color:#E0E0E0">"variance"</font> values over the regions for branches. Since in the case that if there is no branch at site 1,2,3,4, the background is uniform, and the variance of the intensity values at these areas is small. When there exists a branch, the variance of the intensity values can be a large value! So in lastest version of our design, the detection method for site 0 is to find out the <font style="background-color:#E0E0E0">differences</font> between the original image and each image we take for tapping event; the detection method for site 1,2,3,4 is to use <font style="background-color:#E0E0E0">variances</font> as our threshold - if the variance at the specific area is larger than some value (we set 300 here) and it means there exists a branch. Furthermore, to fit this new detection method, we need to carefully decide the region we want to detect due to some unexpected situations - such as the screen pops up "Level x" when you reach Level x and the time-remaining strip affects the detection as well. The image shown below is the regions we decide to detect the branches.
             </p>
             <div style="text-align:center">
             <img src="img/gamelayout2.jpg">
@@ -343,20 +351,17 @@
             In order to deal with the issue of different background color, we analyzed the pictures before writing our code. We wrote a small helper function to help us to calculate the intensity values. We found some interesting things. First, for red background, it's easy to differentiate the branches (green) and background (red), so it is quite accurate when we utilized the variances among intensity values over the pictures. However, for the other two background settings, it's more difficult to differentiate background from foreground when we calculated the variances for intensity values over RGB. Therefore, we explored more by separating the intensity to three layers (R,G,B), and we found that if we only extract the intensity from <font style="background-color:#E0E0E0">green level</font>, the area with branch and without area are easily recognized from the calculations! That is, after extracting the G intensity values from RGB, the variance values when there is no branch will reduce to less than 100 while the variance can roar to larger than 200 when there is a branch. The reason results in this situation are that for the other two background settings, the green values contribute a lot in RGB with small R and B, and if we do the calculation by averaging RGB, it would enhance the variances owing to the big gap among these three layers. And if we only take care of G values, the high influence of less-related R values and B values can be reduced and the variance values can be obviously told apart from the site with a branch or without a branch.
 
             </p>
-            <div style="text-align:center">
-            <font size = "5"> Come join us and see if you can beat our raspberry pi!! </font>
-            </div>
-            </p>
+           
 			<p><b><li><span>Hardware Design</span></li></b></p>
-			So after the Pi Game player finishes the process of taking photos and detecting branches, it is time to build "hands" for it to tap on the screen. Instead of using expensive robotic arms, we build circuits using electrical switches to trigger the tapping on the touch screen on our smartphone. Key points are building pads for contacting with the touch-screen, circuits for controlling the tapping by normal switches, circuits for controlling the tapping by GPIO pulses and the test of the minimum tapping time. 
+			So after our Raspberry Pi finishes the process of taking photos and detecting branches, it is time to build "hands" for it to tap on the screen. Instead of using expensive robotic arms, we build circuits using electric switches controlled by GPIO pins to trigger the tapping on the touch screen of our smartphone. Key points are building pads for contacting with the touch-screen, circuits for controlling the tapping by normal switches, circuits for controlling the tapping by GPIO pulses and the test of the minimum tapping time. 
 			<br>
-			<b>(1) Tapping pads</b>
+			<b>(1) Tapping Pads</b>
 			<br>
 			The basic principle for tapping on the capacitive touch screen is to draw a few electrons from the screen. For example, when people touch the screen with fingers, they are able to draw some electrons by the circuit loop from the cell phone to the ground since people has a capacitance about 30pF~50pF. Thus for triggering a tap on the capacitive touch screen, conductor with a certain magnitude of capacitance is required. 
 			<br>
-			Firstly we use several layers of copper tap to build the tapping pads. After many experiments, we found that the capacitance of ten layers copper tap is good to trigger the tapping accurately. However, a deadly defect of the copper tap pad is that it is unstable and hardly be reused. It performs really good at the first time, but next time we re-stick the pad on the screen, it is not as sensitive as before. The reason is obvious. The process of tearing off from the screen slightly changes the space among each layer thus intensely alters its capacitance. It is quite annoying that we have to re-build two pads for each lab. So we decide to find other stable methods to build these two pads. 
+			Firstly we used several layers of <font style="background-color:#E0E0E0">copper tape</font> to build the tapping pads. After many experiments, we found that the capacitance of ten layers copper tap was good to trigger the tapping accurately. However, a deadly defect of the copper tap pad is that it is unstable and hardly to be reused. It performs really good at the first time, but next time we re-stick the pad on the screen, it is not as sensitive as before. The reason is obvious. The process of tearing off these copper tape pads from the screen slightly changes the space among each layer thus intensely alters its capacitance. It is quite annoying that we have to re-build two pads for each time we restart our work. So we decide to find other stable methods to build these two pads. 
 			<br>
-			Then we found the one cent coin (copper foil) can also serve as a good pad for triggering the touch. Furthermore, within the wire soldered on it, it contacts really well and very stable. Here is the picture which shows these two kinds of pads, the left one is built by the copper tap and the right one is built by the one cent coin. One tricky thing here is that the distance between the pad and the screen should be very small. So every time when we restart our work, we have to bind the pads tightly on the screen by powerful tapes or else the sensitivity will be severely influenced which leads to higher probability of missing touches. 
+			Then we found the <font style="background-color:#E0E0E0">one cent coin</font> (like copper foil) could also serve as a good pad for triggering the touch. Furthermore, within the wire soldered on it, it contacts really well and very stable. Here is the picture which shows these two kinds of pads, the left one is built by the copper tap and the right one is built by the one cent coin. One tricky thing here is that the distance between the pad and the screen should be very small. So every time when we restart our work, we have to bind the pads tightly on the screen by powerful black tapes or else the sensitivity of tapping will be severely influenced which leads to higher probability of missing touches. 
 			<br>
 				<div style="text-align:center">
                 <img src = "img/electrodes.jpg">
@@ -364,7 +369,7 @@
 			<br>
 			<b>(2) Circuits using normal switches</b>
 			<br>
-			After resolving the problem of stable pads for touching the screen, a simple current loop for testing its basic function is essential. Since the other side of the pad has to be connected to the ground (the back of the cell phone), a ground platform made by tinfoil with the same size of our cell phone helps the connection between the other side of the wire and the back of our cell phone. As the following picture shows, with the proper phone case, it contacts pretty well.Then the pad and the ground is connected separately on the two side of a switch. There is also a circuit shows this connection. By successfully trigger the tapping by normal switches, it is time to move on electric switches.
+			After resolving the problem of stable pads for touching the screen, a simple current loop for testing its basic function is essential. Since the other side of the pad has to be connected to the ground (the back of the cell phone), a ground platform made by <font style="background-color:#E0E0E0">tinfoil</font> with the same size of our cell phone helps the connection between the other side of the wire and the back of our cell phone. As the following picture (left side) shows, with the proper phone case, it contacts pretty well.Then the pad and the ground is connected separately on the two side of a switch. There is also a diagram (right side) shows the circuit of this connection. By successfully trigger the tapping by normal switches, it is time to move on electric switches.
 			<br>
 				<div style="text-align:center">
                 <img src = "img/ground.jpg">
@@ -373,20 +378,24 @@
 			<br>
 			<b>(3) Eletric switches</b>
 			<br>
-			As for the Pi Game Player, it can not perform the "touch" actions like human beings. What it can do is output pulses through GPIO pins. So we build two electric switches by H11F1.
+			As for the Pi Game Player, it can not perform the "touch" actions like human beings. What it can do is output pulses through GPIO pins. So we build two electric switches by <font style="background-color:#E0E0E0">H11F1</font>. According to the datasheet of H11F1, H11F1 is composed of a Gallium-Aluminum-Arsenide IRED emitting diode and a symmetrical bilateral silicon photodetector (ideal isolated FET). So if the dianode on the left side is turned on, the output TERM. (pin4 and pin6) will be connected. For our circuit, two free GPIO pins are selected to output <font style="background-color:#E0E0E0">PWM (pulses)</font> for controlling the tapping. When the GPIO output high level voltage, the diode is turned on which leads to the connection between the pad (the coin) which is bound on the capacitive touch screen and the ground of the smart phone. After a while, GPIO will output low level voltage and the touch screen can detect a effective tapping. Thus that is the basic principle of tapping on the capacitive screen controlled by the Pi Game Player.
 			<br>
 				<div style="text-align:center">
 				<img src = "img/circuit_v2.jpg">
                 </div>
 			<br>
+			By the way, the game requires the lumberman to dodge branches by selecting his position towards the trunk. So for playing this game, touches on the left side of the screen and the right side of the screen are demanding so that two pads are built. And the reason of binding them on the bottom of the smart phone is that there is only the places available to be shaded.
 			<br>
 			<b>(4) Tapping time requirement</b>
 			<br>
-			Finally, we write a basic python script for testing the output with these electric switches. This code is also in the code appendix. The basic aim of this script is to test whether these two coins can correctly trigger the tapping. From the analysis in last part, the sleep time between the high-level and low-level output is the minimum time required for the tapping. Even if Raspberry Pi is able to touch the screen in really fast speed (in a magnitude of us), the capacitive touch screen is unable to detect that kind of fast touch. Some time is required for drawing some electrons from the touch screen and calculating the position of the touching point. In general, capacitive touch screen is able to finish this process in 3ms. But actually, we are using coins and electric switches as tapping medium so that time for drawing a few electrons may become longer. After continuous testing, we found that 0.03s is required for triggering a correct touch.
-
+			Finally, we write a basic python script for testing the output with these electric switches. This code is also in the code appendix. The basic aim of this script is to test whether these two coins can correctly trigger the tapping. From the analysis in last part, the sleep time between the high-level and low-level output is the minimum time required for the tapping. Even if Raspberry Pi is able to touch the screen in really fast speed (in a magnitude of us), the capacitive touch screen is unable to detect that kind of fast touch. Some time is required for drawing some electrons from the touch screen and calculating the position of the touching point. In general, capacitive touch screen is able to finish this process in 3ms. But actually, we are using coins and electric switches as tapping medium so that time for drawing a few electrons may become longer. After continuous testing, we found that <font style="background-color:#E0E0E0">0.03s</font> is required for triggering a correct touch. However, since we want to continuously tap five time on the screen. The debouce time between each tapping should also be seriously considered. After carefully measuring, <font style="background-color:#E0E0E0">0.05s</font> is enough for the debouncing mechanism for iPhone touch screen. However, with our Pi Game Player become strong enough--the more accurate branches detection, miss tapping sometimes happens. If we extend the tapping time, the miss tapping is assuaged but its speed decreased. So the trade-off is between the accuracy of tapping and tapping time. After several tests, we found that the total tapping time <font style="background-color:#E0E0E0">0.15s</font> (<font style="background-color:#E0E0E0">0.05s</font> tapping+<font style="background-color:#E0E0E0">0.1s</font> debouncing) is a good balance between the accuracy and speed of tapping. 
+			<br>
             </ul>
 			
-
+			<div style="text-align:center">
+            <font size = "5"> Now our Pi Game Player can play the game! Come join us and see if you can beat it!! </font>
+            </div>
+            </p>
         </div>
 
         <hr class="featurette-divider">
@@ -396,15 +405,39 @@
             <h2 class="featurette-heading">How Good
                 <span class="text-muted">We Achieved</span>
             </h2>
-            <p class="lead">Raspberry Pi is an ideal platform to build a small robot. We get the idea from Lab3 which we can build a robotic car on a raspberry pi system by writing some controlling programming. But, in Lab3, our robot does not have “eyes”. So, here is our idea – we want to build up a robot with eyes and make it play some simple game apps, such as Lumberman. Lumberman is a mobile game app, where you need to avoid the branched when you chop the wood. We implemented the algorithm to detect where are thr branches and make our raspberry pi to chop the wood! </p>
+            <p class="lead">Until now, out powerful Pi Game Player reached the score up to 2855! It is pretty high which even beat one of the developers who is really good at this game (1000). So we think our robot can defeat any human players! Here we will introduce some timing specification of our awesome Pi Game Player to analyze why it can defeat human players quantitatively.</p>
             <br>
-            
-            <p> Keyword: PiCamera, Image Processing, Raspberry Pi </p>
-
+            <ul>
+			So the following picture shows the timing specification for one cycle in the main while loop. Here we executed the timer for the processes including taking photos, calculations for detections, and tapping in serial.As shown in the following picture, taking one phone takes about 0.3s; the calculation takes about 3ms which are really faster compared with other two processes thus can be ignored; the five tapping takes about 0.75s. So for each tapping, our Pi Game Player takes about 0.21s and it can play this game without any wrong detection (But the reason for some wrong tapping will be discussed in next part). For human beings, the time for seeing an image and generate a signal to act is at least 0.1s; the time for taping is at least 0.1s and this can be tested by the Stopwatch on our cell phone. So even the most powerful human player can only perform one tapping in 0.21s--the same speed of our Pi game player. However, people will be tired and distracted by the environment which can lead to the misjudge of the branches so human players can't keep the highest speed--0.21s one tape for a long time. Thus, now it is impossible for any human players to defeat our Pi Game Player.
+            </ul>
+			<br>
+				<div style="text-align:center">
+                <img src = "img/time.jpg">
+                </div>
+			<br>
         </div>
-
-        <hr class="featurette-divider">
-
+		
+		<hr class="featurette-divider">
+        <!-- Fourth Featurette -->
+        <div class="featurette" id="further_improvement">
+            <h2 class="featurette-heading">What strategies
+                <span class="text-muted">To improve it</span>
+            </h2>
+            <p class="lead">Even if our Pi Game Player is able to defeat all human players, the accident game-over caused by miss tapping on the touch screen is an annoying but important issue for this project. If this problem can be resolved, our Pi Game Player can get an infinite score in theory. Therefore this part is going to analyze the possibilities of the missing taping and covers some methods to improve or resolve it.</p>
+            <ul>
+			<p><b><li><span>Possible Reasons for missing Tapping</span></li></b></p>
+			<b>(1) Circuits</b>
+			<br>
+			First, the missing tapping probably owing to the circuit we built for triggering a tapping. The most suspicious part which can cause this problem is the H11F1. According to its datasheet, the time for turning on/off is less than 15us which seems pretty good. However, here we are using coins as the pad for drawing electrons so that time consumed maybe not stable. Thus sometimes the time for drawing small amount of electrons maybe even more than 0.05s which leads to a miss tapping.
+			<br>
+			<b>(2) Errors of tapping detection on the capacitive touch screen</b>
+			<br>
+			Furthermore, the missing tapping may also result from the miss detection of the capacitive touch screen. We all have the experiences that sometimes the touch-screen is not so sensitive when we touch our smartphone. Thus, such so-called miss tapping may actually the missing detecting of our touch-screen which is unavoidable.
+			<p><b><li><span>Strategies for resolving these problems</span></li></b></p>
+            </ul>
+        </div>
+		
+		<hr class="featurette-divider">
                 <!-- Fourth Featurette -->
         <div class="featurette" id="Code_Appendix">
             <h2 class="featurette-heading">What we have created
