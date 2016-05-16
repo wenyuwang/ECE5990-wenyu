@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="This is the report for ECE5990, final project">
-    <meta name="author" content="Wen-Yu Wang">
+    <meta name="author" content="Wen-Yu Wang,Hanchen Jin">
     <link rel="icon" href="img/icon-2.png">
     <title>ECE5990Final-Project</title>
     <style type="text/css">
@@ -91,8 +91,8 @@
     <header class="header-image">
         <div class="headline">
             <div class="container">
-                <h2>ECE5990 Final Project</h2>
-                <h2>Pi Game Player for iPhone!</h2>
+                <h1>Pi Game Player for iPhone!</h1>
+                <h2>Wen-Yu(ww424), Hanchen(hj424)</h2>
             </div>
         </div>
     </header>
@@ -238,7 +238,7 @@
                 <span class="text-muted">work together :)</span>
             </h2>
             <br>
-            <p class="lead">Our project can be split to three categories: platform design, hardware design and software design. Platform design is to provide the spaces for our smartphone and the raspberry pi, also, make sure the relative position of the camera and our smartphone can be fixed. As for hardware design, we are building the "hands" for the raspberry pi to invoke the touch events on the capacity screen of the smartphone when it needs to move to the other side. Last but not least, the software part- this part can be analogous as the mind of our raspberry pi. We apply the image-processing algorithm to detect the branches and decide where to chop the woods on the screen. This project is lots of fun! Join us and see how each part works by scrolling down!  </p>
+            <p class="lead">Our project can be split into three categories: platform design, hardware design and software design. Platform design is to provide the spaces for our smartphone and the raspberry pi, also, make sure the relative position of the camera and our smartphone can be fixed. As for hardware design, we are building the "hands" for the raspberry pi to invoke the touch events on the capacity screen of the smartphone when it needs to move to the other side. Last but not least, the software part- this part can be analogous as the mind of our raspberry pi. We apply the image-processing algorithm to detect the branches and decide where to chop the woods on the screen. This project is lots of fun! Join us and see how each part works by scrolling down!  </p>
             <br>
             <br>
             <br>
@@ -246,7 +246,7 @@
             <ul>
 
             <li><p><b><span>Platform Design</span></b></p>
-            <p style="font-size:1em">For the platform design, we used LEGO to build our architecture. With the flexibility of LEGO, we can rebuild the platform anytime we want when it's not fit for our aim. On this platform, we built several spaces for different parts. Mobile phone, raspberry pi and the breadboard all have their specific areas to put in. More importantly, it can help us to fix the relative distance from the picamera and mobile phone. By this proper platform, we can eliminate some uncertainties when we restart our work each time thus make it more easier to implement the image processing algorithm. </p> 
+            <p style="font-size:1em">For the platform design, we used LEGO to build our architecture. With the flexibility of LEGO, we can rebuild the platform anytime we want when it's not fit for our aim. On this platform, we built several spaces for different parts. Mobile phone, raspberry pi, and the breadboard all have their specific areas to put in. More importantly, it can help us to fix the relative distance from the picamera and mobile phone. By this proper platform, we can eliminate some uncertainties when we restart our work each time thus make it easier to implement the image processing algorithm. </p> 
             <br>
             <br>
             <div style="text-align:center">
@@ -271,7 +271,7 @@
             <br>
             The first version of our design is the slowest algorithm but with high accuracy. The idea is quite simple. Among all the steps in our implementation, deciding the values of a threshold is the trickiest part for our algorithm. In our first version of our algorithm, we stored the <span style="background-color: #E0E0E0">mean values </span> of intensities over the region of the first branches right above the head of the lumberman. The reason we use the mean values is because that at the beginning of the game, there is definitely no branch right above the head of the lumberman. Besides, the region right above the head of the lumberman contains lots of high-intensity values (white color with intensity 255), then the mean value at the site is high enough to differentiate the mean values for the intensities when there appears a branch (with green, black color which lower the intensity of the area). Therefore, we just need to calculate the differences between the mean values of the intensities of the specific region with the stored values at the beginning, and if the difference is larger than some value (we set 60 here) then we can know there is a branch. 
             <br>
-            The lumberman chop the tree with correctly dodging the branches but the speed is really low so that time run out after about 14 chops (14 points). We guess the slowest process is about taking a photo but we want to do some accurate calculation. So we used the <span style="background-color: #E0E0E0">time</span> module in Python as the timer to calculate how long does each function take when it executes in our algorithm to find out the bottleneck step which takes the most time. After such operation, we found that the time for PiCamera to take a picture requires 0.2-0.4 secs while the calculation of the mean values and differences only takes a few milliseconds. In order to speed up the speeds of the capturing photos, we set the parameter <span style="background-color: #E0E0E0">use_video_port</span> <span style="color:#7700BB">True</span> in the capturing method. However, unfortunately after this small improvement, it helped quite well - it can achieve 40 points, but the time for taking photos is still too long.
+            The lumberman chop the tree with correctly dodging the branches but the speed is really low so that time runs out after about 14 chops (14 points). We guess the slowest process is about taking a photo but we want to do some accurate calculation. So we used the <span style="background-color: #E0E0E0">time</span> module in Python as the timer to calculate how long does each function take when it executes in our algorithm to find out the bottleneck step which takes the most time. After such operation, we found that the time for PiCamera to take a picture requires 0.2-0.4 secs while the calculation of the mean values and differences only takes a few milliseconds. In order to speed up the speeds of the capturing photos, we set the parameter <span style="background-color: #E0E0E0">use_video_port</span> <span style="color:#7700BB">True</span> in the capturing method. However, unfortunately after this small improvement, it helped quite well - it can achieve 40 points, but the time for taking photos is still too long.
             </p>
             <blockquote>
                 camera.capture(fileName, <i><span style="color:#ff8800">use_video_port</span></i>=<span style="color:#7700BB">True</span>)
@@ -286,7 +286,7 @@
             <p style="margin-left:2em ;font-size:1em ;" >
             <b>Lower the resolution of the picture took</b>
             <br>
-            We lowered the resolution then it can help to eliminate the number of pixels we need to consider about and make it faster to write in a file and read the image file. The resolution of the pictures for our latest version is 160 * 120.</p>
+            We lowered the resolution then it can help to eliminate the number of pixels we need to consider about and make it faster to write to a file and read the image file. The resolution of the pictures for our latest version is 160 * 120.</p>
 
             <p style="margin-left:2em ;font-size:1em ;" >
             <b>Isolate a CPU core and try to eliminate latency from CPU</b>
@@ -342,7 +342,7 @@
             <p style="margin-left:1em;">
             <b>- Challenges for different background</b>
             <br>
-            Another interesting challenges worth noted is that: in Lamberman game app there are three different background settings! This contributes to different relative values between the intensities of background and foreground, and we need to customize our code to fit in different situations.</p>
+            Another interesting challenges worth noted is that: in Lumberman game app there are three different background settings! This contributes to different relative values between the intensities of background and foreground, and we need to customize our code to fit in different situations.</p>
             <div style="text-align:center">
             <img src="img/bk_red.png" alt ="red background">
             <img src="img/bk_blue.png" alt ="blue background">
@@ -381,17 +381,17 @@
 			<br>
 			<b>(3) Eletric switches</b>
 			<br>
-			As for the Pi Game Player, it can not perform the "touch" actions like human beings. What it can do is output pulses through GPIO pins. So we build two electric switches by <span style="background-color: #E0E0E0">H11F1</span>. According to the datasheet of H11F1, H11F1 is composed of a Gallium-Aluminum-Arsenide IRED emitting diode and a symmetrical bilateral silicon photodetector (ideal isolated FET). So if the dianode on the left side is turned on, the output TERM. (pin4 and pin6) will be connected. For our circuit, two free GPIO pins are selected to output <span style="background-color: #E0E0E0">PWM (pulses)</span> for controlling the tapping. When the GPIO output high level voltage, the diode is turned on which leads to the connection between the pad (the coin) which is bound on the capacitive touch screen and the ground of the smart phone. After a while, GPIO will output low level voltage and the touch screen can detect a effective tapping. Thus that is the basic principle of tapping on the capacitive screen controlled by the Pi Game Player.
+			As for the Pi Game Player, it can not perform the "touch" actions like human beings. What it can do is output pulses through GPIO pins. So we build two electric switches by H11F1. According to the datasheet of <span style="background-color: #E0E0E0">H11F1</span>, H11F1 is composed of a Gallium-Aluminum-Arsenide IRED emitting diode and a symmetrical bilateral silicon photodetector (ideal isolated FET). So if the diode on the left side is turned on, the output TERM. (pin4 and pin6) will be connected. For our circuit, two free GPIO pins are selected to output <span style="background-color: #E0E0E0">PWM</span> (pulses) for controlling the tapping. When the GPIO output high-level voltage, the diode is turned on which leads to the connection between the pad (the coin) which is bound on the capacitive touch screen and the ground of the smartphone. After a while, GPIO will output low-level voltage and the touch screen can detect an effective tapping. Thus, that is the basic principle of tapping on the capacitive screen controlled by the Pi Game Player. 
 			<br>
 				<div style="text-align:center">
 				<img src = "img/circuit_v2.jpg" alt ="circuit_v2">
                 </div>
 			<br>
-			By the way, the game requires the lumberman to dodge branches by selecting his position towards the trunk. So for playing this game, touches on the left side of the screen and the right side of the screen are demanding so that two pads are built. And the reason of binding them on the bottom of the smart phone is that there is only the places available to be shaded.
+			By the way, the game requires the lumberman to dodge branches by selecting his position towards the trunk. So for playing this game, touches on the left side of the screen and the right side of the screen are demanding so that two pads are built. And the reason of binding them on the bottom of the smartphone is that there is only the place available to be shaded.
 			<br>
 			<b>(4) Tapping time requirement</b>
 			<br>
-			Finally, we write a basic python script for testing the output with these electric switches. This code is also in the code appendix. The basic aim of this script is to test whether these two coins can correctly trigger the tapping. From the analysis in last part, the sleep time between the high-level and low-level output is the minimum time required for the tapping. Even if Raspberry Pi is able to touch the screen in really fast speed (in a magnitude of us), the capacitive touch screen is unable to detect that kind of fast touch. Some time is required for drawing some electrons from the touch screen and calculating the position of the touching point. In general, capacitive touch screen is able to finish this process in 3ms. But actually, we are using coins and electric switches as tapping medium so that time for drawing a few electrons may become longer. After continuous testing, we found that <span style="background-color: #E0E0E0">0.03s</span> is required for triggering a correct touch. However, since we want to continuously tap five time on the screen. The debouce time between each tapping should also be seriously considered. After carefully measuring, <span style="background-color: #E0E0E0">0.05s</span> is enough for the debouncing mechanism for iPhone touch screen. However, with our Pi Game Player become strong enough--the more accurate branches detection, miss tapping sometimes happens. If we extend the tapping time, the miss tapping is assuaged but its speed decreased. So the trade-off is between the accuracy of tapping and tapping time. After several tests, we found that the total tapping time <span style="background-color: #E0E0E0">0.15s</span> (<span style="background-color: #E0E0E0">0.05s</span> tapping+<span style="background-color: #E0E0E0">0.1s</span> debouncing) is a good balance between the accuracy and speed of tapping. 
+			Finally, we write a basic python script for testing the output with these electric switches. This code is also in the code appendix. The basic aim of this script is to test whether these two coins can correctly trigger the tapping. From the analysis in last part, the sleep time between the high-level and low-level output is the minimum time required for the tapping. Even if Raspberry Pi is able to touch the screen in really fast speed (in a magnitude of us), the capacitive touch screen is unable to detect that kind of fast touch. Some time is required for drawing some electrons from the touch screen and calculating the position of the touching point. In general, capacitive touch screen is able to finish this process in 3ms. But actually, we are using coins and electric switches as tapping medium so that time for drawing a few electrons may become longer. After continuous testing, we found that <span style="background-color: #E0E0E0">0.03s</span> is required for triggering a correct touch. However, since we want to continuously tap five times on the screen. The debounce time between each tapping should also be seriously considered. After carefully measuring, <span style="background-color: #E0E0E0">0.05s</span> is enough for the debouncing mechanism for iPhone touch screen. However, with our Pi Game Player become strong enough--the more accurate branches detection, miss tapping sometimes happens. If we extend the tapping time, the miss tapping is assuaged but its speed decreased. So the trade-off is between the accuracy of tapping and tapping time. After several tests, we found that the total tapping time <span style="background-color: #E0E0E0">0.15s</span> (<span style="background-color: #E0E0E0">0.05s</span> tapping+<span style="background-color: #E0E0E0">0.1s</span> debouncing) is a good balance between the accuracy and speed of tapping. 
 			<br>
             </li>
             </ul>
@@ -412,7 +412,7 @@
             <p class="lead">Until now, out powerful Pi Game Player reached the score up to 2855! It is pretty high which even beat one of the developers who is really good at this game (1000). So we think our robot can defeat any human players! Here we will introduce some timing specification of our awesome Pi Game Player to analyze why it can defeat human players quantitatively.</p>
             <br>
             <ul>
-			<li>So the following picture shows the timing specification for one cycle in the main while loop. Here we executed the timer for the processes including taking photos, calculations for detections, and tapping in serial.As shown in the following picture, taking one phone takes about 0.3s; the calculation takes about 3ms which are really faster compared with other two processes thus can be ignored; the five tapping takes about 0.75s. So for each tapping, our Pi Game Player takes about 0.21s and it can play this game without any wrong detection (But the reason for some wrong tapping will be discussed in next part). For human beings, the time for seeing an image and generate a signal to act is at least 0.1s; the time for taping is at least 0.1s and this can be tested by the Stopwatch on our cell phone. So even the most powerful human player can only perform one tapping in 0.21s--the same speed of our Pi game player. However, people will be tired and distracted by the environment which can lead to the misjudge of the branches so human players can't keep the highest speed--0.21s one tape for a long time. Thus, now it is impossible for any human players to defeat our Pi Game Player.</li>
+			<li>So the following picture shows the timing specification for one cycle in the main while loop. Here we executed the timer for the processes including taking photos, calculations for detections and tapping in serial.As shown in the following picture, taking one phone takes about 0.3s; the calculation takes about 3ms which are really faster compared with other two processes thus can be ignored; the five tapping takes about 0.75s. So for each tapping, our Pi Game Player takes about 0.21s and it can play this game without any wrong detection (But the reason for some wrong tapping will be discussed in next part). For human beings, the time for seeing an image and generate a signal to act is at least 0.1s; the time for taping is at least 0.1s and this can be tested by the Stopwatch on our cell phone. So even the most powerful human player can only perform one tapping in 0.21s--the same speed of our Pi game player. However, people will be tired and distracted by the environment which can lead to the misjudge of the branches so human players can't keep the highest speed--0.21s one tape for a long time. Thus, now it is impossible for any human players to defeat our Pi Game Player.</li>
             </ul>
 			<br>
 				<div style="text-align:center">
@@ -430,11 +430,23 @@
             <p class="lead">Even if our Pi Game Player is able to defeat all human players, the accident game-over caused by miss tapping on the touch screen is an annoying but important issue for this project. If this problem can be resolved, our Pi Game Player can get an infinite score in theory. Therefore this part is going to analyze the possibilities of the missing taping and covers some methods to improve or resolve it.</p>
             <ul>
 			<li><p><b><span>Possible Reasons for missing Tapping</span></b></p>
-			<b>(1) Circuits</b>
+			<b>(1) Golden Pad</b>
 			<br>
-			First, the missing tapping probably owing to the circuit we built for triggering a tapping. The most suspicious part which can cause this problem is the H11F1. According to its datasheet, the time for turning on/off is less than 15us which seems pretty good. However, here we are using coins as the pad for drawing electrons so that time consumed maybe not stable. Thus sometimes the time for drawing small amount of electrons maybe even more than 0.05s which leads to a miss tapping.
+			To address the problem of the missing tapping owing to electrodes, TA Jacob recommended us we can use a gold pad for our electrodes since the conductivity of golden is higher than copper. So it can collect electrons from the electrodes better and faster than the copper which we are using for our project right now. 
 			<br>
-			<b>(2) Errors of tapping detection on the capacitive touch screen</b>
+			<b>(2) Environmental Light Condition</b>
+			<br>
+			In this project, we put lots of effort in speeding up our algorithm so we made the resolution of the picture taken by the piCamera really low (160*120). However, this idea makes our algorithm vulnerable to the environmental light condition - every time we test our program we have to make the environmental light condition uniform by keeping it for a certain distance. We can make our algorithm less vulnerable by elevating our resolution to 320*240. If we make the resolution higher, the image would contain more intensity information and we can make our algorithm more stable and accurate. 
+			<br>
+			<b>(3) Detection </b>
+			<br>
+			For now, our platform uses a cheap picamera which provides a low-quality image and slows the speeds of our implementation. Another alternative to speed up our algorithm and enhance the accuracy of our detection is to use RGB Color Sensor with IR filter. With the RGB Color Sensor, it can detect the changes of the color over a region fast and accurately, which provides a better solution than piCamera. Furthermore, using this sensor, we don't need to take care of the issue of environmental light condition change because it only detects the changes in the RGB values. 
+			<br>
+			<b>(4) Circuits</b>
+			<br>
+			First, the missing tapping probably owing to the circuit we built for triggering a tapping. The most suspicious part which can cause this problem is the H11F1. According to its datasheet, the time for turning on/off is less than 15us which seems pretty good. However, here we are using coins as the pad for drawing electrons so that time consumed maybe not stable. Thus sometimes the time for drawing a few electrons maybe even more than 0.05s which leads to a miss tapping.
+			<br>
+			<b>(5) Errors of tapping detection on the capacitive touch screen</b>
 			<br>
 			Furthermore, the missing tapping may also result from the miss detection of the capacitive touch screen. We all have the experiences that sometimes the touch-screen is not so sensitive when we touch our smartphone. Thus, such so-called miss tapping may actually the missing detecting of our touch-screen which is unavoidable.
             </li>
@@ -462,27 +474,43 @@
 
             <p style="font-size:1.2em" ><b> Parts List </b></p>
 
-             <table style="border: 2px solid rgb(148, 201, 255); height: 120px; background-color: rgb(242, 247, 247); width: 350px; margin: 0 auto; ">
+             <table style="border: 2px solid rgb(148, 201, 255); height: 250px; background-color: rgb(242, 247, 247); width: 400px; margin: 0 auto; ">
                 <tbody>
                     <tr>
                         <td><b> Name</b></td>
-                        <td><b>Price</b></td>
                         <td><b>Quantity</b></td>
+                        <td><b>Price</b></td>
                     </tr>
                     <tr>
                         <td> Raspberry Pi2 B </td>
-                        <td>35$</td>
                         <td>1</td>
+                        <td>35$</td>
                     </tr>
                     <tr>
                         <td> PiCamera Board Module</td>
-                        <td>19$</td>
                         <td>1</td>
+                         <td>19$</td>
                     </tr>
                     <tr>
-                        <td> Wires</td>
-                        <td>Stock in Lab</td>
+                        <td> H11F1 </td>
+                        <td>2</td>
+                        <td>3.3$</td>
+
+                    </tr>
+                    <tr>
+                        <td> Breadboard </td>
+                        <td>2</td>
+                        <td>5$</td>
+                    </tr>
+                    <tr>
+                        <td> Wires+Resistors+Tape</td>
                         <td>some</td>
+                        <td>1$</td>
+                    </tr>
+                                        <tr>
+                        <td> <b>Total </b></td>
+                        <td></td>
+                        <td>71.6$</td>
                     </tr>
                     </tbody>
             </table>
@@ -620,7 +648,7 @@ if __name__ == '__main__':
 
 
 <li><p><b><span>Second version - with highest scores as 2855 points </span></b></p>
-            In this version we improve our speed for pi to play this game app, also high accuracy is guaranteed. 
+            In this version we improve the perfomance of out Pi Game Player. In detail, the Pi Game Player is able to continuously tapping five times by the analyze of one photo thus the speed of playing this game is significantly increased. We also properly elongate the time for each tapping to guarantee the tapping accuracy.
 <pre><code class="python">
 ###############################################################################
 #                                                                             #
@@ -745,8 +773,57 @@ if __name__ == '__main__':
 </code>
 </pre>
 </li>
-</ul>
 
+<li><p><b><span>Tapping testing- controlled by GPIO output pulses </span></b></p>
+            This is the script for testing the funtion of two tappings controlled by Raspberry Pi GPIO pins. Also it can perform the function of cleaning GPIO settings since the while loop in the main function can be only interrupted by "CTRL+C" which may lead to some problems on the next execution.  
+<pre><code class="python">
+###############################################################################
+#                                                                             #
+# file:    output_test_vfinal.py                                              #
+#                                                                             #
+# authors: Wen-Yu Wang  - ww424                                               #
+#          Hanchen Jin  - hj424                                               #
+#                                                                             #
+# date:    May 1 2016                                                         #
+#                                                                             #
+# brief:   This is the final version of testing tapping function controlled   #
+#          GPIO pulses                                                        #
+#                                                                             #
+###############################################################################
+#import GPIO library, sleep function
+import RPi.GPIO as GPIO
+from time import sleep
+
+#set GPIO mode  
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(5,GPIO.OUT)
+GPIO.setup(6,GPIO.OUT)
+GPIO.output(5,0)
+GPIO.output(6,0)
+
+#set initial value
+a=-1
+while a &lt; 2:
+#input 0,1 for testing tapping pads, other positive number for cleaning GPIO settings
+	a= raw_input("Input a number:")
+	a= int(a)
+	if a==1:            #input 1 for testing one tapping pad	
+		GPIO.output(6,1)
+		sleep(0.05)     #tapping time required:0.05s
+		GPIO.output(6,0)		
+	elif a==0:          #input0 for testing another tapping pad	
+		GPIO.output(5,1)
+		sleep(0.05)     #tapping time required:0.05s
+		GPIO.output(5,0)		
+print("Control finishes!")
+#clean up GPIO when normal exit  
+GPIO.cleanup()
+</code>
+</pre>
+</li>
+
+</ul>
+<br>
 <p style="font-size:1.2em" ><b> References </b></p>
 <a href="https://picamera.readthedocs.io/en/release-1.10/" target="_blank">PiCamera Document</a>
 <br>
@@ -757,6 +834,8 @@ if __name__ == '__main__':
 <a href="http://effbot.org/imagingbook/" target="_blank">The Python Imaging Library Handbook</a>
 <br>
 <a href="https://people.ece.cornell.edu/land/courses/ece5760/FinalProjects/s2014/alt53_akt52_sm2354/alt53_akt52_sm2354/index.html" target="_blank">ECE 5760: Final Project: Flappy Bird Player</a>
+<br>
+<a href="http://pdf.datasheetcatalog.com/datasheet/fairchild/H11F1.pdf" target="_blank">H11F1 Datasheet</a>
 <br>
 <a href="http://startbootstrap.com/template-categories/one-page/" target="_blank">One-page bootstrap template</a>
 
@@ -775,25 +854,18 @@ if __name__ == '__main__':
             </h2>
             <br>
             <br>
-            <br>
-            <br>
-            <p class="lead">This project is lots of fun and challenging!! At first, the motivation for this project is that we want to build a system that can help us to play the game and get high scores. After developing this project, we found it challenging. The difficulties we faced are including environmental lighting condition, the stability of the tapping electrodes, the slow speed of pi-camera, the low-quality of imaging of pi-camera. We faced these difficulties and came up with the solutions accordingly, at last, we made it!! We made our raspberry pi can score almost 3000 points. </p>
-            <br>
-            <br>
-            <br>
-            <br>
+            <p class="lead">This project is lots of fun and challenging!! At first, the motivation for this project is that we want to build a system that can help us to play the game and get high scores. After developing this project, we found it challenging. The difficulties we faced includes environmental lighting condition, the stability of the tapping electrodes, the slow speed of pi-camera, the low-quality of images taken by pi-camera. We faced these difficulties and came up with the solutions accordingly, at last, we made it!! Combining the techniques of software and hardware, we help our raspberry create its eyes and hands. Finally, we made it can score almost 3000 points. </p>
             <br>
             <br>
             <br>
             <br>
             <p style="font-size:1.2em" ><b> Authors </b></p>
             <br>
-            <br>
             <img src = "img/wenyu.png" alt ="wenyu"> 
-            <p style="font-size:1.2em" > Wen-Yu Wang (ww424) : <br>In charge of software part, including the detection of branches and the template of report. She loves this project and she thinks this project is the most interesting project she has worked during her student life. In this project, she thinks they have learned how to developing a "project" and how to solve problems systematically. )</p>
+            <p style="font-size:1.2em" > Wen-Yu Wang (ww424) : <br>In charge of software part, including developing the algorithm for detection of branches (testing and debugging), cooperating with hardware part, and the template, formatting of the report. She loves this project and she thinks this project is the most interesting project she has worked during her student life. In this project, she thinks they have learned how to developing a "project" and how to solve problems systematically. )</p>
             <br>
             <img src = "img/hj424.png" alt="henchen"> 
-            <p style="font-size:1.2em" > Hanchen Jin (hj424) : <br>In charge of hardware part, including the circuit design and the connection of the GPIO. </p>
+            <p style="font-size:1.2em" > Hanchen Jin (hj424) : <br>In charge of hardware part, including the circuit design,testing and debugging. And he also provides some ideas and assistance for implementing the branches detecting algorithm. Actually at first, He thinks it is easy to build the circuit to tapping on the touch screen, however, selecting material to build the stable hardware which requires lots of experiments is really tough. Furthermore, he was impressed by the powerful Python libraries and he got some interests towards software development. </p>
 
         </div>
         <hr class="featurette-divider">
@@ -803,7 +875,7 @@ if __name__ == '__main__':
             <h2 class="featurette-heading">Acknowledgement 
             </h2>
 
-            <p class="lead">Thanks professor and course staffs for the helpful advices. In the process of developing this project, professor Joe gave us lots of useful information and cared about us very much. We really appreciated that. And the advices from TAs were helped as well. Thanks for your efforts and made this project more perfect. Besides, Wen-Yu wanted to give a special thank to her boyfriend for the creative idea for this project :) </p>
+            <p class="lead">Thanks professor and TAs for the helpful advices. In the process of developing this project, professor Joe gave us lots of useful information and cared about us very much. We really appreciated that. And the advices from TAs were helpful as well. Thanks for their efforts and made this project more perfect. Besides, Wen-Yu wanted to give a special thank to her boyfriend for the creative idea for this project :) </p>
             
 
         </div>
