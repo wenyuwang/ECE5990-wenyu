@@ -430,30 +430,34 @@
             <p class="lead">Even if our Pi Game Player is able to defeat all human players, the accident game-over caused by miss tapping on the touch screen is an annoying but important issue for this project. If this problem can be resolved, our Pi Game Player can get an infinite score in theory. Therefore this part is going to analyze the possibilities of the missing taping and covers some methods to improve or resolve it.</p>
             <ul>
 			<li><p><b><span>Possible Reasons for missing Tapping</span></b></p>
-			<b>(1) Golden Pad</b>
-			<br>
-			To address the problem of the missing tapping owing to electrodes, TA Jacob recommended us we can use a gold pad for our electrodes since the conductivity of golden is higher than copper. So it can collect electrons from the electrodes better and faster than the copper which we are using for our project right now. 
-			<br>
-			<b>(2) Environmental Light Condition</b>
-			<br>
-			In this project, we put lots of effort in speeding up our algorithm so we made the resolution of the picture taken by the piCamera really low (160*120). However, this idea makes our algorithm vulnerable to the environmental light condition - every time we test our program we have to make the environmental light condition uniform by keeping it for a certain distance. We can make our algorithm less vulnerable by elevating our resolution to 320*240. If we make the resolution higher, the image would contain more intensity information and we can make our algorithm more stable and accurate. 
-			<br>
-			<b>(3) Detection </b>
-			<br>
-			For now, our platform uses a cheap picamera which provides a low-quality image and slows the speeds of our implementation. Another alternative to speed up our algorithm and enhance the accuracy of our detection is to use RGB Color Sensor with IR filter. With the RGB Color Sensor, it can detect the changes of the color over a region fast and accurately, which provides a better solution than piCamera. Furthermore, using this sensor, we don't need to take care of the issue of environmental light condition change because it only detects the changes in the RGB values. 
-			<br>
-			<b>(4) Circuits</b>
-			<br>
-			First, the missing tapping probably owing to the circuit we built for triggering a tapping. The most suspicious part which can cause this problem is the H11F1. According to its datasheet, the time for turning on/off is less than 15us which seems pretty good. However, here we are using coins as the pad for drawing electrons so that time consumed maybe not stable. Thus sometimes the time for drawing a few electrons maybe even more than 0.05s which leads to a miss tapping.
-			<br>
-			<b>(5) Errors of tapping detection on the capacitive touch screen</b>
-			<br>
-			Furthermore, the missing tapping may also result from the miss detection of the capacitive touch screen. We all have the experiences that sometimes the touch-screen is not so sensitive when we touch our smartphone. Thus, such so-called miss tapping may actually the missing detecting of our touch-screen which is unavoidable.
+			
+			The missing tapping may also result from the miss detection of the capacitive touch screen. We all have the experiences that sometimes the touch-screen is not so sensitive when we touch our smartphone. Thus, such so-called miss tapping may actually the missing detecting of our touch-screen which is unavoidable.
             </li>
 			<li><p><b><span>Strategies for resolving these problems</span></b></p>
-			Since the time for each process like taking photos, tapping can't be further decreased, and the problem of missing tapping can be reduced by the extension of tapping time, the timing control is a tricky issue here. We have to consider about the enough time but can not make it too long owing to the time limit when playing the game.  The best idea for improving the speed of executing multiple processes is pipelining/paralleled execution. 
+            <b>(1) Golden Pad</b>
+            <br>
+            To address the problem of the missing tapping owing to electrodes, TA Jacob recommended us we can use a gold pad for our electrodes since the conductivity of golden is higher than copper. So it can collect electrons from the electrodes better and faster than the copper which we are using for our project right now. 
+            <br>
+            <b>(2) Environmental Light Condition</b>
+            <br>
+            In this project, we put lots of effort in speeding up our algorithm so we made the resolution of the picture taken by the piCamera really low (160*120). However, this idea makes our algorithm vulnerable to the environmental light condition - every time we test our program we have to make the environmental light condition uniform by keeping it for a certain distance. We can make our algorithm less vulnerable by elevating our resolution to 320*240. If we make the resolution higher, the image would contain more intensity information and we can make our algorithm more stable and accurate. 
+            <br>
+            <b>(3) Detection </b>
+            <br>
+            For now, our platform uses a cheap picamera which provides a low-quality image and slows the speeds of our implementation. Another alternative to speed up our algorithm and enhance the accuracy of our detection is to use RGB Color Sensor with IR filter. With the RGB Color Sensor, it can detect the changes of the color over a region fast and accurately, which provides a better solution than piCamera. Furthermore, using this sensor, we don't need to take care of the issue of environmental light condition change because it only detects the changes in the RGB values. 
+            <br>
+            <b>(4) Circuits</b>
+            <br>
+            First, the missing tapping probably owing to the circuit we built for triggering a tapping. The most suspicious part which can cause this problem is the H11F1. According to its datasheet, the time for turning on/off is less than 15us which seems pretty good. However, here we are using coins as the pad for drawing electrons so that time consumed maybe not stable. Thus sometimes the time for drawing a few electrons maybe even more than 0.05s which leads to a miss tapping.
+            <br>
+            <b>(5) Parallelized Execution</b>
+            <br>
+			Currently, our Pi Game Player can do a good job but it can perform better. The timing control is a tricky issue here because the time for each process like taking photos, tapping can't be further decreased, and the problem of missing tapping can be reduced by the extension of tapping time. We have to consider about the enough time but can not make it too long owing to the time limit when playing the game.  The best idea for improving the speed of executing multiple processes is pipelining/paralleled execution. 
 			<br>
-			Here we want to appreciate our professor - Professor Joseph who provided this idea! We can build a FIFO system to store the control signals generated by the calculation. We can use different cores to be in charge different work here. For example, the job of Core 1 is to take photos, calculate the values for detection and store control signals into control FIFO. Core 2 is responsible for tapping on the screen. Following is the basic idea of paralleled execution for our project. Since the time of two tapping is nearly the same as taking one photo plus the calculation. Besides, we can generate five tapping events after taking one photo, the paralleled execution is practicable. Just as the timing diagram shows, after the first picture taken and analyzed, five tapping control signals have been stored into output FIFO. Aud after tapping twice, the screen is updated which is available to take a new photo and generate another two tapping control signals. By doing this, the process of watching+thinking and tapping can be fluently paralleled executed. So now time for each tapping is <span style="background-color: #E0E0E0">0.15s</span>. The time contraint for this game is about <span style="background-color: #E0E0E0">0.21s</span> each tapping. In other words, within this tapping time, players can continue playing nearly forever without missing judgment. Under that condition, we can extend the tapping time to <span style="background-color: #E0E0E0">0.16~0.20s</span> to improve the tapping accuracy and improve its performance (playing speed) as well.
+			Here we want to appreciate our professor - Professor Joseph who provided this idea! We can build a FIFO system to store the control signals generated by the calculation. We can use different cores to be in charge different work here. For example, the job of Core 1 is to take photos, calculate the values for detection and store control signals into control FIFO. Core 2 is responsible for tapping on the screen. However, it is a tough work to implement it.
+			<br>
+			Following is the timing specification of the paralleled execution for our project. Here we have to analyze the timing issue carefully. Just as the timing diagram shows, after the first picture taken and analyzed, five tapping control signals have been stored into the output FIFO. The T_inter is a critical time here for starting the second photos. We want to add two more control signals in the output FIFO because the time for two tappings is nearly the same with taking one photos. By doing this, we can fill the pipeline thus get the highest throughput. We have to take the second photo with the screen is updated after two tappings and before the third tapping. As the following equation shows, T_tap is the time for the first tapping (0.15s); T_update is the time for updating the display; T_invoke is the prepareing time for taking one photo like invoking the functions.
+			By analyzing these parameters, we can get the correct point to start the process of taking further photos so that the process of watching+thinking and tapping can be fluently paralleled executed. So now time for each tapping is <span style="background-color: #E0E0E0">0.15s</span>. The time contraint for this game is about <span style="background-color: #E0E0E0">0.21s</span> each tapping. In other words, within this tapping time, players can continue playing nearly forever without missing judgment. Under that condition, we can extend the tapping time to <span style="background-color: #E0E0E0">0.16~0.20s</span> to improve the tapping accuracy and improve its performance (playing speed) as well.
 			<br>
 				<div style="text-align:center">
                 <img src = "img/time2.jpg" alt="time2.jpg">
