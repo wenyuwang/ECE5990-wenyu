@@ -1,1 +1,2 @@
-# ECE5990 Final project 
+# Final Project Report for ECE5990 @ Cornell
+Raspberry Pi is an ideal platform to build a small robot. We get the idea from Lab3 which we can build a robotic car on a raspberry pi system by writing some controlling programming. But, in Lab3, our robot does not have “eyes”. So, here is our idea – we want to build up a robot with eyes and make it play some simple game apps, such as Lumberman. Lumberman is a mobile game app, where you need to avoid the branched when you chop the wood. We implemented the algorithm to detect where the branches are and make our raspberry pi to chop the wood happily!
